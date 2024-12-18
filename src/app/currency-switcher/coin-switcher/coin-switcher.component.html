@@ -1,0 +1,7 @@
+<select #dropdown (change)="coinSwitcherService.setCurrency(dropdown.value)">
+  @for (currency of coinSwitcherService.currencies(); track currency.code) {
+  <option [value]="currency.code">
+    {{ currency.code }}({{ currency.symbol }})
+  </option>
+  }
+</select>
