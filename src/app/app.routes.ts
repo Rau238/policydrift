@@ -1,19 +1,38 @@
 import { Routes } from '@angular/router';
-import { CurrencySwitcherComponent } from './currency-switcher/currency-switcher.component';
-import { CrudUsingSignalComponent } from './crud-signal/crud-using-signal/crud-using-signal.component';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/crud-signal',
-    pathMatch: 'full',
+    loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent),
+    title: 'PolicyDrift - AI-powered policy insights'
   },
   {
-    path: 'coin-switcher',
-    component: CurrencySwitcherComponent,
+    path: 'article/:slug',
+    loadComponent: () => import('./features/article-detail/article-detail.component').then(m => m.ArticleDetailComponent),
+    title: 'Article - PolicyDrift'
   },
   {
-    path: 'crud-signal',
-    component: CrudUsingSignalComponent,
+    path: 'all-articles',
+    loadComponent: () => import('./features/all-articles/all-articles.component').then(m => m.AllArticlesComponent),
+    title: 'All Articles - PolicyDrift'
   },
+  {
+    path: 'terms',
+    loadComponent: () => import('./features/terms/terms.component').then(m => m.TermsComponent),
+    title: 'Terms of Service - PolicyDrift'
+  },
+  {
+    path: 'privacy',
+    loadComponent: () => import('./features/privacy/privacy.component').then(m => m.PrivacyComponent),
+    title: 'Privacy Policy - PolicyDrift'
+  },
+  {
+    path: 'about',
+    loadComponent: () => import('./features/about/about.component').then(m => m.AboutComponent),
+    title: 'About Us - PolicyDrift'
+  },
+  {
+    path: '**',
+    redirectTo: ''
+  }
 ];

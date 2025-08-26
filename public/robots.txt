@@ -1,0 +1,30 @@
+User-agent: *
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Allow crawling of all content
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://policydrift.com/sitemap.xml
+
+# Disallow crawling of any potential admin areas
+Disallow: /admin/
+Disallow: /private/
+Disallow: /_next/
+Disallow: /api/
+
+# Allow specific search engine bots
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
