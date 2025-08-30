@@ -4,7 +4,7 @@
   "description": "AI-powered political insights and comprehensive policy analysis platform",
   "display": "standalone",
   "background_color": "#ffffff",
-  "scope": "./",
+   "scope": "./",
   "start_url": "./",
   "theme_color": "#1f2937",
   "orientation": "portrait-primary",
@@ -26,3 +26,4 @@
     }
   ]
 }
+
