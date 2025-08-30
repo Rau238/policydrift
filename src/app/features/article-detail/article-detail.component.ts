@@ -638,7 +638,7 @@ export class ArticleDetailComponent implements OnInit {
   getCanonicalUrl(): string {
     const currentArticle = this.article();
     if (!currentArticle) return '';
-    return `https://policydrift.com/article/${currentArticle.slug}`;
+    return `https://policydrift.live/article/${currentArticle.slug}`;
   }
 
   getAuthorName(author: Author | string | undefined): string {

@@ -214,8 +214,8 @@ export class TermsComponent implements OnInit {
       description: 'Read PolicyDrift\'s terms of service, user agreements, and legal conditions. Understand your rights and responsibilities when using our AI-powered political analysis platform.',
       keywords: 'terms of service, legal terms, user agreement, conditions, PolicyDrift legal, platform terms',
       ogType: 'website',
-      ogImage: 'https://policydrift.com/images/terms-og.jpg',
-      canonicalUrl: 'https://policydrift.com/terms',
+      ogImage: 'https://policydrift.live/images/terms-og.jpg',
+      canonicalUrl: 'https://policydrift.live/terms',
       robots: 'index, follow',
       structuredData: this.getTermsStructuredData()
     };
@@ -229,7 +229,7 @@ export class TermsComponent implements OnInit {
       "@type": "WebPage",
       "name": "Terms of Service",
       "description": "Terms of service and legal conditions for PolicyDrift platform",
-      "url": "https://policydrift.com/terms",
+      "url": "https://policydrift.live/terms",
       "dateModified": "2024-08-26",
       "breadcrumb": {
         "@type": "BreadcrumbList",
@@ -238,13 +238,13 @@ export class TermsComponent implements OnInit {
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://policydrift.com"
+            "item": "https://policydrift.live"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Terms of Service",
-            "item": "https://policydrift.com/terms"
+            "item": "https://policydrift.live/terms"
           }
         ]
       }

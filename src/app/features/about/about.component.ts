@@ -230,8 +230,8 @@ export class AboutComponent implements OnInit {
       description: 'Learn about PolicyDrift\'s mission to provide AI-powered political insights and policy analysis. Discover our team, vision, and commitment to transparent, data-driven political reporting.',
       keywords: 'about PolicyDrift, political analysis platform, AI political insights, policy research, political transparency, data-driven journalism',
       ogType: 'website',
-      ogImage: 'https://policydrift.com/images/about-og.jpg',
-      canonicalUrl: 'https://policydrift.com/about',
+      ogImage: 'https://policydrift.live/images/about-og.jpg',
+      canonicalUrl: 'https://policydrift.live/about',
       structuredData: this.getAboutStructuredData()
     };
 
@@ -244,7 +244,7 @@ export class AboutComponent implements OnInit {
       "@type": "AboutPage",
       "name": "About PolicyDrift",
       "description": "Learn about PolicyDrift's AI-powered political analysis platform",
-      "url": "https://policydrift.com/about",
+      "url": "https://policydrift.live/about",
       "breadcrumb": {
         "@type": "BreadcrumbList",
         "itemListElement": [
@@ -252,20 +252,20 @@ export class AboutComponent implements OnInit {
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://policydrift.com"
+            "item": "https://policydrift.live"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "About Us",
-            "item": "https://policydrift.com/about"
+            "item": "https://policydrift.live/about"
           }
         ]
       },
       "mainEntity": {
         "@type": "Organization",
         "name": "PolicyDrift",
-        "url": "https://policydrift.com",
+        "url": "https://policydrift.live",
         "description": "AI-powered political analysis and policy insights platform",
         "foundingDate": "2024",
         "contactPoint": {

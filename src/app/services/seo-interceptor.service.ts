@@ -28,7 +28,7 @@ export class SeoInterceptorService {
     window.scrollTo(0, 0);
 
     // Update canonical URL
-    this.seoService.updateCanonicalUrl(`https://policydrift.com${url}`);
+    this.seoService.updateCanonicalUrl(`https://policydrift.live${url}`);
 
     // Add page-specific tracking if needed
     if (typeof (window as any).gtag !== 'undefined') {

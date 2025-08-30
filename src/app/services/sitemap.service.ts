@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class SitemapService {
-  private baseUrl = 'https://policydrift.com';
+  private baseUrl = 'https://policydrift.live';
 
   generateSitemap(): string {
     const urls = [

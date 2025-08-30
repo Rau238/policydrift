@@ -486,8 +486,8 @@ export class AllArticlesComponent implements OnInit {
       description: 'Browse all PolicyDrift articles covering political news, policy analysis, government updates, and breaking developments. Comprehensive archive of AI-powered political insights and analysis.',
       keywords: 'all articles, political news archive, policy analysis, government news, political coverage, breaking news, policy updates, political articles',
       ogType: 'website',
-      ogImage: 'https://policydrift.com/images/all-articles-og.jpg',
-      canonicalUrl: 'https://policydrift.com/all-articles',
+      ogImage: 'https://policydrift.live/images/all-articles-og.jpg',
+      canonicalUrl: 'https://policydrift.live/all-articles',
       structuredData: this.getAllArticlesStructuredData()
     };
 
@@ -500,7 +500,7 @@ export class AllArticlesComponent implements OnInit {
       "@type": "CollectionPage",
       "name": "All Articles - PolicyDrift",
       "description": "Complete archive of political news and policy analysis articles",
-      "url": "https://policydrift.com/all-articles",
+      "url": "https://policydrift.live/all-articles",
       "breadcrumb": {
         "@type": "BreadcrumbList",
         "itemListElement": [
@@ -508,13 +508,13 @@ export class AllArticlesComponent implements OnInit {
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://policydrift.com"
+            "item": "https://policydrift.live"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "All Articles",
-            "item": "https://policydrift.com/all-articles"
+            "item": "https://policydrift.live/all-articles"
           }
         ]
       },
@@ -524,7 +524,7 @@ export class AllArticlesComponent implements OnInit {
         "itemListElement": this.allArticles().slice(0, 20).map((article: NewsArticle, index: number) => ({
           "@type": "ListItem",
           "position": index + 1,
-          "url": `https://policydrift.com/article/${article.slug}`,
+          "url": `https://policydrift.live/article/${article.slug}`,
           "name": article.title
         }))
       }

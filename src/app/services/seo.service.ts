@@ -20,9 +20,9 @@ export interface SeoData {
   providedIn: 'root'
 })
 export class SeoService {
-  private siteUrl = 'https://policydrift.com';
+  private siteUrl = 'https://policydrift.live';
   private siteName = 'PolicyDrift';
-  private defaultImage = 'https://policydrift.com/images/og-default.jpg';
+  private defaultImage = 'https://policydrift.live/images/og-default.jpg';
 
   constructor(
     private meta: Meta,

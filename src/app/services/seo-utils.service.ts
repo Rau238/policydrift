@@ -127,9 +127,9 @@ export class SeoUtilsService {
   // Generate breadcrumb structure
   generateBreadcrumbs(url: string): Array<{name: string, url: string}> {
     const segments = url.split('/').filter(segment => segment.length > 0);
-    const breadcrumbs = [{ name: 'Home', url: 'https://policydrift.com' }];
+    const breadcrumbs = [{ name: 'Home', url: 'https://policydrift.live' }];
 
-    let currentPath = 'https://policydrift.com';
+    let currentPath = 'https://policydrift.live';
 
     segments.forEach((segment, index) => {
       currentPath += `/${segment}`;

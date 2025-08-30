@@ -32,8 +32,8 @@ export class AppComponent implements OnInit {
       keywords: 'policy analysis, political news, AI insights, governance, policy drift',
       author: 'PolicyDrift Team',
       ogType: 'website',
-      ogImage: 'https://policydrift.com/images/og-default.jpg',
-      canonicalUrl: 'https://policydrift.com'
+      ogImage: 'https://policydrift.live/images/og-default.jpg',
+      canonicalUrl: 'https://policydrift.live'
     });
   }
 }

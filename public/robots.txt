@@ -11,7 +11,7 @@ Allow: /
 Crawl-delay: 1
 
 # Sitemap location
-Sitemap: https://policydrift.com/sitemap.xml
+Sitemap: https://policydrift.live/sitemap.xml
 
 # Disallow crawling of any potential admin areas
 Disallow: /admin/

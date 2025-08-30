@@ -266,8 +266,8 @@ export class PrivacyComponent implements OnInit {
       description: 'Learn how PolicyDrift protects your privacy and handles your data. Read our comprehensive privacy policy covering data collection, usage, and your privacy rights.',
       keywords: 'privacy policy, data protection, user privacy, data collection, GDPR compliance, privacy rights, data security',
       ogType: 'website',
-      ogImage: 'https://policydrift.com/images/privacy-og.jpg',
-      canonicalUrl: 'https://policydrift.com/privacy',
+      ogImage: 'https://policydrift.live/images/privacy-og.jpg',
+      canonicalUrl: 'https://policydrift.live/privacy',
       robots: 'index, follow',
       structuredData: this.getPrivacyStructuredData()
     };
@@ -281,7 +281,7 @@ export class PrivacyComponent implements OnInit {
       "@type": "WebPage",
       "name": "Privacy Policy",
       "description": "Privacy policy and data protection information for PolicyDrift platform",
-      "url": "https://policydrift.com/privacy",
+      "url": "https://policydrift.live/privacy",
       "dateModified": "2024-08-26",
       "breadcrumb": {
         "@type": "BreadcrumbList",
@@ -290,13 +290,13 @@ export class PrivacyComponent implements OnInit {
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://policydrift.com"
+            "item": "https://policydrift.live"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Privacy Policy",
-            "item": "https://policydrift.com/privacy"
+            "item": "https://policydrift.live/privacy"
           }
         ]
       }

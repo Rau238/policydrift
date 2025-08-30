@@ -1022,8 +1022,8 @@ export class HomeComponent implements OnInit {
       description: 'Stay informed with PolicyDrift\'s comprehensive coverage of political developments, policy changes, and governance trends. Get AI-powered insights on breaking news, economic policies, healthcare reforms, and more.',
       keywords: 'policy analysis, political news, governance, breaking news, AI insights, policy drift, political analysis, government policy, political trends, policy updates',
       ogType: 'website',
-      ogImage: 'https://policydrift.com/images/home-og.jpg',
-      canonicalUrl: 'https://policydrift.com',
+      ogImage: 'https://policydrift.live/images/home-og.jpg',
+      canonicalUrl: 'https://policydrift.live',
       structuredData: [
         this.seoService.getWebsiteStructuredData(),
         this.seoService.getOrganizationStructuredData(),
@@ -1040,14 +1040,14 @@ export class HomeComponent implements OnInit {
       "@type": "CollectionPage",
       "name": "PolicyDrift - Latest Political News & Policy Analysis",
       "description": "Browse the latest political news, policy analysis, and breaking developments from PolicyDrift",
-      "url": "https://policydrift.com",
+      "url": "https://policydrift.live",
       "mainEntity": {
         "@type": "ItemList",
         "numberOfItems": this.getArticleCount(),
         "itemListElement": this.getAllSortedArticles().slice(0, 10).map((article, index) => ({
           "@type": "ListItem",
           "position": index + 1,
-          "url": `https://policydrift.com/article/${article.slug}`,
+          "url": `https://policydrift.live/article/${article.slug}`,
           "name": article.title
         }))
       }
