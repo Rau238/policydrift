@@ -1,33 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { SeoService } from '../../services/seo.service';
+import { SeoService } from '../../shared/services/seo.service';
 
 @Component({
   selector: 'app-privacy',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   template: `
     <div class="min-h-screen bg-white">
-
-      <!-- Header Navigation -->
-      <header class="border-b border-gray-200 sticky top-0 z-50 bg-white">
-        <div class="max-w-6xl mx-auto px-4">
-          <!-- Top Header -->
-          <div class="flex items-center justify-between py-4">
-            <div class="flex items-center space-x-8">
-              <a [routerLink]="['/']" class="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors">PolicyDrift</a>
-              <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                AI-powered policy insights
-              </span>
-            </div>
-            <div class="flex items-center space-x-4">
-              <a [routerLink]="['/']" class="text-sm text-blue-600 hover:text-blue-700 font-medium">← Back to Home</a>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <!-- Main Content -->
       <main class="max-w-4xl mx-auto px-4 py-12">
         <div class="prose prose-lg max-w-none">
@@ -194,20 +174,7 @@ import { SeoService } from '../../services/seo.service';
                 <p class="text-gray-700"><strong>Data Protection Officer:</strong> dpo&#64;policy.drift.yt.com</p>
               </div>
             </section>
-
           </div>
-
-          <!-- Footer Navigation -->
-          <div class="mt-16 pt-8 border-t border-gray-200">
-            <div class="flex items-center justify-between">
-              <a [routerLink]="['/']" class="text-blue-600 hover:text-blue-700 font-medium">← Back to Home</a>
-              <div class="flex items-center space-x-6">
-                <a [routerLink]="['/terms']" class="text-gray-500 hover:text-gray-700">Terms of Service</a>
-                <a [routerLink]="['/about']" class="text-gray-500 hover:text-gray-700">About Us</a>
-              </div>
-            </div>
-          </div>
-
         </div>
       </main>
 

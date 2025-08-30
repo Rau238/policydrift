@@ -1,8 +1,7 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
-import { HeaderComponent } from '../../shared/header/header.component';
-import { SeoService } from '../../services/seo.service';
+import { SeoService } from '../../shared/services/seo.service';
 
 interface NewsArticle {
   id: string;
@@ -23,18 +22,53 @@ interface NewsArticle {
 @Component({
   selector: 'app-all-articles',
   standalone: true,
-  imports: [CommonModule,  HeaderComponent],
+  imports: [CommonModule, RouterLink],
   template: `
     <div class="min-h-screen bg-gray-50">
-      <!-- Use Common Header -->
-      <app-header></app-header>
 
-      <!-- Main Layout with Sidebar -->
-      <div class="max-w-7xl mx-auto px-4 py-6">
-        <div class="flex gap-6">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        
+        <!-- Mobile Category Selector (visible only on small screens) -->
+        <div class="lg:hidden mb-6">
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <label for="category-select" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+            <select 
+              id="category-select"
+              (change)="setActiveCategory($event.target.value)"
+              [value]="activeCategory()"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+              <option *ngFor="let category of categories" [value]="category">
+                {{ category }} ({{ getCategoryCount(category) }})
+              </option>
+            </select>
+            
+            <!-- Mobile Sort Options -->
+            <div class="mt-4 flex gap-2">
+              <select 
+                (change)="setSortBy($event.target.value)"
+                [value]="sortBy()"
+                class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                <option value="date">📅 Date</option>
+                <option value="category">🏷️ Category</option>
+              </select>
+              <button
+                (click)="toggleSortOrder()"
+                class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm flex items-center gap-1">
+                <svg class="w-4 h-4 transform transition-transform"
+                     [class.rotate-180]="sortOrder() === 'asc'"
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+                <span class="hidden sm:inline">{{ sortOrder() === 'desc' ? 'Newest' : 'Oldest' }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
 
-          <!-- Left Sidebar - Sticky Categories Panel -->
-          <aside class="w-72 flex-shrink-0">
+        <div class="flex flex-col lg:flex-row gap-6">
+
+          <!-- Desktop Sidebar - Hidden on mobile -->
+          <aside class="hidden lg:block w-72 flex-shrink-0">
             <div class="sticky top-24 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h2 class="text-lg font-semibold text-gray-900 mb-4">Categories</h2>
 
@@ -110,28 +144,29 @@ interface NewsArticle {
           <!-- Main Content Area -->
           <main class="flex-1">
             <!-- Content Header -->
-            <div class="mb-6">
-              <h1 class="text-3xl font-bold text-gray-900 mb-2">
+            <div class="mb-4 sm:mb-6">
+              <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                 {{ activeCategory() === 'All' ? 'All Articles' : activeCategory() + ' Articles' }}
               </h1>
-              <p class="text-gray-600">
+              <p class="text-sm sm:text-base text-gray-600">
                 {{ getTotalArticleCount() }} {{ getTotalArticleCount() === 1 ? 'article' : 'articles' }} found
               </p>
             </div>
 
             <!-- Articles Grid -->
             <section>
-              <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 <article
                   *ngFor="let article of getFilteredAndSortedArticles(); trackBy: trackByArticle"
-                  class="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl px-8 pb-8 pt-40 w-full h-80 group cursor-pointer"
+                  class="relative isolate flex flex-col justify-end overflow-hidden rounded-xl sm:rounded-2xl px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8 pt-32 sm:pt-40 w-full h-64 sm:h-72 lg:h-80 group cursor-pointer"
                   (click)="navigateToArticle(article.slug || article.id)">
 
                   <!-- Background image based on category -->
                   <img
                     [src]="getArticleImage(article.category)"
                     [alt]="article.category"
-                    class="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    class="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    (error)="onImageError($event)">
 
                   <!-- Dynamic gradient overlay based on article ID for random colors -->
                   <div
@@ -139,11 +174,11 @@ interface NewsArticle {
                     [ngClass]="getRandomGradient(article.id)"></div>
 
                   <!-- Category badge -->
-                  <div class="absolute top-4 left-4 z-10">
-                    <span class="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wider">
+                  <div class="absolute top-3 sm:top-4 left-3 sm:left-4 z-10">
+                    <span class="bg-white/20 backdrop-blur-sm text-white px-2 sm:px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wider">
                       {{ article.category }}
                     </span>
-                    <div *ngIf="article.isBreaking" class="mt-2">
+                    <div *ngIf="article.isBreaking" class="mt-1 sm:mt-2">
                       <span class="animate-pulse bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold uppercase shadow-lg">
                         🔴 Breaking
                       </span>
@@ -151,30 +186,31 @@ interface NewsArticle {
                   </div>
 
                   <!-- Time and read time -->
-                  <div class="absolute top-4 right-4 z-10 text-white/80 text-xs">
-                    {{ article.timeAgo }} • {{ article.readTime }}
+                  <div class="absolute top-3 sm:top-4 right-3 sm:right-4 z-10 text-white/80 text-xs">
+                    <span class="hidden sm:inline">{{ article.timeAgo }} • </span>{{ article.readTime }}
                   </div>
 
                   <!-- Content -->
                   <div class="relative z-10">
-                    <h3 class="text-xl font-bold text-white mb-2 leading-tight group-hover:text-white/90 transition-colors duration-200">
+                    <h3 class="text-lg sm:text-xl font-bold text-white mb-2 leading-tight group-hover:text-white/90 transition-colors duration-200 line-clamp-2">
                       {{ article.title }}
                     </h3>
-                    <p class="text-white/80 text-sm leading-relaxed line-clamp-2 mb-3">
+                    <p class="text-white/80 text-xs sm:text-sm leading-relaxed line-clamp-2 mb-3">
                       {{ article.excerpt }}
                     </p>
 
                     <!-- Author info -->
                     <div class="flex items-center justify-between">
                       <div class="flex items-center space-x-2 text-white/70 text-xs">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
                           <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
                         </svg>
-                        <span>{{ article.author || 'PolicyDrift Team' }}</span>
+                        <span class="hidden sm:inline">{{ article.author || 'PolicyDrift Team' }}</span>
+                        <span class="sm:hidden">{{ (article.author || 'PolicyDrift Team').split(' ')[0] }}</span>
                       </div>
 
                       <div class="opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                         </svg>
                       </div>
@@ -184,14 +220,14 @@ interface NewsArticle {
               </div>
 
               <!-- No articles message -->
-              <div class="text-center py-16" *ngIf="getFilteredAndSortedArticles().length === 0">
+              <div class="text-center py-12 sm:py-16" *ngIf="getFilteredAndSortedArticles().length === 0">
                 <div class="text-gray-400 mb-4">
-                  <svg class="w-20 h-20 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-16 h-16 sm:w-20 sm:h-20 mx-auto" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
                   </svg>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">No articles found</h3>
-                <p class="text-gray-600">Try selecting a different category or check back later for new content.</p>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">No articles found</h3>
+                <p class="text-sm sm:text-base text-gray-600">Try selecting a different category or check back later for new content.</p>
               </div>
             </section>
 
@@ -251,6 +287,36 @@ interface NewsArticle {
     * {
       transition-property: color, background-color, border-color, transform, opacity, box-shadow;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 640px) {
+      .line-clamp-2 {
+        -webkit-line-clamp: 2;
+      }
+      
+      article {
+        min-height: 16rem;
+      }
+    }
+
+    /* Tablet optimizations */
+    @media (min-width: 641px) and (max-width: 1024px) {
+      article {
+        min-height: 18rem;
+      }
+    }
+
+    /* Ensure proper spacing on very small screens */
+    @media (max-width: 480px) {
+      .px-4 {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+      }
+      
+      .gap-4 {
+        gap: 0.75rem;
+      }
     }
   `]
 })
@@ -535,8 +601,10 @@ export class AllArticlesComponent implements OnInit {
     this.activeCategory.set(category);
   }
 
-  setSortBy(sortBy: 'date' | 'category'): void {
-    this.sortBy.set(sortBy);
+  setSortBy(sortBy: string): void {
+    if (sortBy === 'date' || sortBy === 'category') {
+      this.sortBy.set(sortBy as 'date' | 'category');
+    }
   }
 
   toggleSortOrder(): void {
@@ -575,19 +643,20 @@ export class AllArticlesComponent implements OnInit {
   }
 
   getArticleImage(category: string): string {
+    // Use reliable placeholder images that are guaranteed to work
     const images: { [key: string]: string } = {
-      'Technology': 'https://images.unsplash.com/photo-1518709268805-4e9042af2176',
-      'Business': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
-      'Sports': 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211',
-      'International': 'https://images.unsplash.com/photo-1504711434969-e33886168f5c',
-      'Health': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56',
-      'Entertainment': 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91',
-      'Politics': 'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620',
-      'Environment': 'https://images.unsplash.com/photo-1569163139394-de44cb2c53ec',
-      'Economics': 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3',
-      'Education': 'https://images.unsplash.com/photo-1523240795612-9a054b0db644'
+      'Technology': 'https://picsum.photos/800/600?random=1',
+      'Business': 'https://picsum.photos/800/600?random=2',
+      'Sports': 'https://picsum.photos/800/600?random=3',
+      'International': 'https://picsum.photos/800/600?random=4',
+      'Health': 'https://picsum.photos/800/600?random=5',
+      'Entertainment': 'https://picsum.photos/800/600?random=6',
+      'Politics': 'https://picsum.photos/800/600?random=7',
+      'Environment': 'https://picsum.photos/800/600?random=8',
+      'Economics': 'https://picsum.photos/800/600?random=9',
+      'Education': 'https://picsum.photos/800/600?random=10'
     };
-    return images[category] || 'https://images.unsplash.com/photo-1495020689067-958852a7765e';
+    return images[category] || 'https://picsum.photos/800/600?random=0';
   }
 
   getGradientClass(category: string): string {
@@ -689,5 +758,13 @@ export class AllArticlesComponent implements OnInit {
   // Navigate to article detail page using slug
   navigateToArticle(slug: string): void {
     this.router.navigate(['/article', slug]);
+  }
+
+  // Handle image loading errors
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img) {
+      img.src = 'https://picsum.photos/800/600?random=0';
+    }
   }
 }

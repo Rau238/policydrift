@@ -8,7 +8,7 @@
       "resources": {
         "files": [
           "/favicon.ico",
-          "/index.csr.html",
+          "/favicon.svg",
           "/index.html",
           "/manifest.webmanifest",
           "/*.css",
@@ -22,8 +22,24 @@
       "updateMode": "prefetch",
       "resources": {
         "files": [
+          "/assets/**/*",
+          "/icons/**/*",
           "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
         ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api-freshness",
+      "urls": [
+        "/data/**/*.json"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 100,
+        "maxAge": "3d",
+        "timeout": "10s"
       }
     }
   ]

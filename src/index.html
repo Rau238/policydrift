@@ -1,91 +1,230 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>PolicyDrift - AI-powered Policy Insights & Political Analysis</title>
-    <base href="/">
+<head>
+  <meta charset="utf-8">
+  <title>PolicyDrift - AI-Powered Policy Insights</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- SEO Meta Tags -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Stay informed with PolicyDrift's AI-powered political insights and comprehensive policy analysis. Breaking news, governance trends, and data-driven political reporting.">
-    <meta name="keywords" content="policy analysis, political news, AI insights, governance, policy drift, political analysis, breaking news, government policy">
-    <meta name="author" content="PolicyDrift Team">
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-    <meta name="theme-color" content="#1f2937">
-    <meta name="format-detection" content="telephone=no">
+  <!-- PWA Meta Tags -->
+  <meta name="description" content="Stay informed with cutting-edge AI analysis of political policies, trends, and their real-world impact. Get comprehensive insights that help you understand the complex world of governance.">
+  <meta name="keywords" content="policy analysis, political news, AI insights, governance, policy drift, political analysis">
+  <meta name="author" content="PolicyDrift Team">
+  <meta name="robots" content="index, follow">
 
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:site_name" content="PolicyDrift">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="en_US">
+  <!-- Theme Colors -->
+  <meta name="theme-color" content="#6366f1">
+  <meta name="msapplication-TileColor" content="#6366f1">
+      <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PolicyDrift">
 
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@PolicyDrift">
-    <meta name="twitter:creator" content="@PolicyDrift">
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="PolicyDrift - AI-Powered Policy Insights">
+  <meta property="og:description" content="Stay informed with cutting-edge AI analysis of political policies, trends, and their real-world impact.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://policydrift.live">
+  <meta property="og:image" content="https://policydrift.live/images/og-image.jpg">
+  <meta property="og:site_name" content="PolicyDrift">
 
-    <!-- Additional SEO Tags -->
-    <meta name="application-name" content="PolicyDrift">
-    <meta name="apple-mobile-web-app-title" content="PolicyDrift">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="mobile-web-app-capable" content="yes">
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PolicyDrift - AI-Powered Policy Insights">
+  <meta name="twitter:description" content="Stay informed with cutting-edge AI analysis of political policies, trends, and their real-world impact.">
+  <meta name="twitter:image" content="https://policydrift.live/images/twitter-card.jpg">
 
-    <!-- Favicon and Icons -->
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="apple-touch-icon" href="favicon.ico">
-    <link rel="manifest" href="/manifest.json">
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.webmanifest">
 
-    <!-- Canonical URL (will be updated per page) -->
-    <link rel="canonical" href="https://policydrift.live">
+  <!-- Favicon and Icons -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192x192.svg">
 
-    <!-- DNS Prefetch for Performance -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <!-- Preconnect to external domains for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
-    <!-- Preconnect for Performance -->
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+  <!-- DNS Prefetch for performance -->
+  <link rel="dns-prefetch" href="https://images.unsplash.com">
 
-    <!-- Google Fonts with Display Swap for Performance -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;family=Roboto:wght@300;400;500;700&amp;display=swap" rel="stylesheet">
-
-    <!-- Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <!-- Structured Data for Website -->
-    <script type="application/ld+json">
+  <!-- Structured Data -->
+  <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebSite",
+      "@type": "WebApplication",
       "name": "PolicyDrift",
-      "alternateName": "Policy Drift",
+      "description": "AI-Powered Policy Insights and Analysis",
       "url": "https://policydrift.live",
-      "description": "AI-powered policy insights and analysis platform providing comprehensive coverage of political developments, policy changes, and governance trends.",
-      "publisher": {
-        "@type": "Organization",
-        "name": "PolicyDrift",
-        "url": "https://policydrift.live",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://policydrift.live/logo.png",
-          "width": 300,
-          "height": 60
-        }
+      "applicationCategory": "NewsApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
       },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://policydrift.live/search?q={search_term_string}",
-        "query-input": "required name=search_term_string"
+      "author": {
+        "@type": "Organization",
+        "name": "PolicyDrift Team"
       }
     }
-    </script>
-    <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#1976d2">
-  <link rel="manifest" href="manifest.webmanifest">
+  </script>
+
 </head>
-  <body>
-    <app-root></app-root>
-    <noscript>Please enable JavaScript to continue using this application.</noscript>
+<body>
+  <app-root></app-root>
+
+<!-- PWA Install Prompt -->
+<div id="pwa-install-prompt" class="hidden pwa-prompt">
+  <div class="pwa-prompt-content">
+    <h3>📲 Install PolicyDrift</h3>
+    <p>Stay updated with the latest policy insights — right from your home screen.</p>
+    <div class="pwa-prompt-actions">
+      <button id="pwa-install-btn" class="btn btn-primary">Install</button>
+      <button id="pwa-dismiss-btn" class="btn btn-secondary">Not Now</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/ngsw-worker.js')
+        .then(reg => console.log("SW registered:", reg))
+        .catch(err => console.log("SW registration failed:", err));
+    });
+  }
+
+  // PWA Install Prompt
+  let deferredPrompt;
+  const pwaPrompt = document.getElementById('pwa-install-prompt');
+  const installBtn = document.getElementById('pwa-install-btn');
+  const dismissBtn = document.getElementById('pwa-dismiss-btn');
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    if (!localStorage.getItem("pwaPromptShown")) {
+      setTimeout(() => {
+        pwaPrompt.classList.remove('hidden');
+        pwaPrompt.classList.add('show');
+      }, 2000);
+      localStorage.setItem("pwaPromptShown", "true");
+    }
+  });
+
+  installBtn.addEventListener('click', () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(choice => {
+        console.log("User choice:", choice.outcome);
+        deferredPrompt = null;
+        pwaPrompt.classList.add('hidden');
+      });
+    }
+  });
+
+  dismissBtn.addEventListener('click', () => {
+    pwaPrompt.classList.add('hidden');
+  });
+</script>
+
+<!-- PWA Prompt Styles -->
+<style>
+  .pwa-prompt {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    width: calc(100% - 32px);
+    max-width: 420px;
+    padding: 20px;
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.35s ease-in-out;
+  }
+
+  .pwa-prompt.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .pwa-prompt.hidden {
+    display: none;
+  }
+
+  .pwa-prompt-content h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pwa-prompt-content p {
+    margin: 0 0 16px;
+    color: #4b5563;
+    font-size: 15px;
+  }
+
+  .pwa-prompt-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .pwa-prompt-actions .btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background 0.3s ease;
+  }
+
+  .btn-primary {
+    background: #6366f1;
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: #4f46e5;
+  }
+
+  .btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+  }
+
+  .btn-secondary:hover {
+    background: #e5e7eb;
+  }
+
+  @media (max-width: 480px) {
+    .pwa-prompt {
+      bottom: 10px;
+      padding: 16px;
+      border-radius: 12px;
+    }
+
+    .pwa-prompt-content h3 {
+      font-size: 18px;
+    }
+
+    .pwa-prompt-content p {
+      font-size: 14px;
+    }
+  }
+</style>
+
+
 </body>
 </html>

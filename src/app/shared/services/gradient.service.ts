@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { GradientManager, GradientGenerators, GradientOptions } from '../utils';
+import { GradientManager, GradientGenerators, GradientOptions } from '../../utils';
 
 export type GradientTheme = 'vibrant' | 'cool' | 'warm' | 'subtle' | 'themed' | 'random';
 

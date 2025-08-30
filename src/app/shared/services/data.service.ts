@@ -15,7 +15,7 @@ import {
 })
 export class DataService {
   private readonly apiBaseUrl = 'https://api.policydrift.com/v1'; // Future API URL
-  private readonly mockDataPath = '/assets/data';
+  private readonly mockDataPath = 'data';
 
   // Use mock data for now - easily switchable to real API
   private useMockData = true;
