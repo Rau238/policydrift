@@ -1,0 +1,140 @@
+{
+  "categories": [
+    {
+      "id": "politics",
+      "name": "Politics",
+      "slug": "politics",
+      "description": "Political news, government policies, and electoral updates",
+      "articleCount": 45,
+      "badge": "HOT",
+      "icon": "🏛️",
+      "gradient": "bg-gradient-to-r from-blue-500 to-purple-600",
+      "badgeColor": "bg-red-500",
+      "isActive": true,
+      "subcategories": ["elections", "policy", "government"]
+    },
+    {
+      "id": "economy",
+      "name": "Economy",
+      "slug": "economy",
+      "description": "Economic policies, market analysis, and financial news",
+      "articleCount": 32,
+      "badge": "TRENDING",
+      "icon": "📈",
+      "gradient": "bg-gradient-to-r from-green-500 to-teal-600",
+      "badgeColor": "bg-green-500",
+      "isActive": true,
+      "subcategories": ["markets", "policy", "trade"]
+    },
+    {
+      "id": "health",
+      "name": "Health",
+      "slug": "health",
+      "description": "Healthcare policies, public health initiatives, and medical news",
+      "articleCount": 28,
+      "badge": "NEW",
+      "icon": "🏥",
+      "gradient": "bg-gradient-to-r from-red-500 to-pink-600",
+      "badgeColor": "bg-blue-500",
+      "isActive": true,
+      "subcategories": ["policy", "research", "public-health"]
+    },
+    {
+      "id": "technology",
+      "name": "Technology",
+      "slug": "technology",
+      "description": "Tech policy, digital governance, and innovation news",
+      "articleCount": 24,
+      "badge": "FEATURED",
+      "icon": "💻",
+      "gradient": "bg-gradient-to-r from-indigo-500 to-blue-600",
+      "badgeColor": "bg-purple-500",
+      "isActive": true,
+      "subcategories": ["ai", "privacy", "regulation"]
+    },
+    {
+      "id": "education",
+      "name": "Education",
+      "slug": "education",
+      "description": "Education policies, academic research, and learning initiatives",
+      "articleCount": 19,
+      "badge": "UPDATED",
+      "icon": "📚",
+      "gradient": "bg-gradient-to-r from-yellow-500 to-orange-600",
+      "badgeColor": "bg-yellow-500",
+      "isActive": true,
+      "subcategories": ["policy", "research", "funding"]
+    },
+    {
+      "id": "environment",
+      "name": "Environment",
+      "slug": "environment",
+      "description": "Environmental policies, climate change, and sustainability",
+      "articleCount": 15,
+      "badge": "CLIMATE",
+      "icon": "🌱",
+      "gradient": "bg-gradient-to-r from-emerald-500 to-green-600",
+      "badgeColor": "bg-emerald-500",
+      "isActive": true,
+      "subcategories": ["climate", "policy", "sustainability"]
+    }
+  ],
+  "authors": [
+    {
+      "id": "john-smith",
+      "name": "John Smith",
+      "bio": "Senior Political Analyst with 15 years of experience covering government policy and political developments.",
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      "email": "john.smith@policydrift.com",
+      "socialLinks": {
+        "twitter": "https://twitter.com/johnsmith_pol",
+        "linkedin": "https://linkedin.com/in/johnsmith-political",
+        "website": "https://johnsmithpolitics.com"
+      }
+    },
+    {
+      "id": "sarah-johnson",
+      "name": "Sarah Johnson",
+      "bio": "Economic Policy Expert specializing in fiscal policy, market analysis, and economic trends.",
+      "avatar": "https://images.unsplash.com/photo-1494790108755-2616b612b29c?w=150&h=150&fit=crop&crop=face",
+      "email": "sarah.johnson@policydrift.com",
+      "socialLinks": {
+        "twitter": "https://twitter.com/sarahjohnson_eco",
+        "linkedin": "https://linkedin.com/in/sarah-johnson-economist"
+      }
+    },
+    {
+      "id": "michael-brown",
+      "name": "Michael Brown",
+      "bio": "Healthcare Policy Researcher focusing on public health initiatives and medical policy analysis.",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      "email": "michael.brown@policydrift.com",
+      "socialLinks": {
+        "twitter": "https://twitter.com/mikebrown_health",
+        "linkedin": "https://linkedin.com/in/michael-brown-health"
+      }
+    },
+    {
+      "id": "emily-davis",
+      "name": "Emily Davis",
+      "bio": "Technology Policy Analyst covering AI governance, privacy regulations, and digital innovation.",
+      "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+      "email": "emily.davis@policydrift.com",
+      "socialLinks": {
+        "twitter": "https://twitter.com/emilydavis_tech",
+        "linkedin": "https://linkedin.com/in/emily-davis-tech"
+      }
+    },
+    {
+      "id": "robert-wilson",
+      "name": "Robert Wilson",
+      "bio": "Education Policy Expert with focus on academic research, funding policies, and educational reforms.",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+      "email": "robert.wilson@policydrift.com",
+      "socialLinks": {
+        "twitter": "https://twitter.com/robertwilson_edu",
+        "linkedin": "https://linkedin.com/in/robert-wilson-education"
+      }
+    }
+  ]
+}

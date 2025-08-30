@@ -3,37 +3,20 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { HeaderComponent } from '../../shared/header/header.component';
 import { SeoService } from '../../services/seo.service';
-
-interface NewsCategory {
-  id: string;
-  name: string;
-  articleCount: string;
-  badge: string;
-  icon: string;
-  gradient: string;
-  badgeColor: string;
-}
-
-interface NewsArticle {
-  id: string;
-  slug: string; // Add slug for SEO-friendly URLs
-  title: string;
-  excerpt: string;
-  category: string;
-  timeAgo: string;
-  readTime: string;
-  gradient: string;
-  isBreaking?: boolean;
-  publishedDate: string; // ISO date string for sorting
-  publishedTimestamp: number; // Timestamp for easy sorting
-  author?: string;
-  tags?: string[];
-}
+import { DataService } from '../../services/data.service';
+import { NewsArticle, NewsCategory } from '../../models/article.model';
+import { CardSkeletonComponent } from '../../shared/skeleton/card-skeleton.component';
+import { GradientGenerators, generateRandomGradient, GradientManager } from '../../utils/gradient.utils';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, HeaderComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    HeaderComponent,
+    CardSkeletonComponent
+  ],
   template: `
     <div class="min-h-screen bg-white">
       <!-- Use Common Header -->
@@ -46,54 +29,75 @@ interface NewsArticle {
         <div class="mb-8">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-2xl font-bold text-gray-900">Browse Articles</h2>
-            <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-              {{ getFilteredArticlesCount() }} of {{ getArticleCount() }} articles
-            </span>
+            <div class="flex items-center gap-3">
+              <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                {{ getFilteredArticlesCount() }} of {{ getArticleCount() }} articles
+              </span>
+            </div>
           </div>
 
           <!-- Category Buttons -->
-          <div class="flex flex-wrap gap-3 mb-6">
-            <button
-              *ngFor="let category of newsCategories(); trackBy: trackByCategory"
-              (click)="setActiveCategory(category.id)"
-              class="flex items-center space-x-2 px-4 py-2 rounded-xl border-2 transition-all duration-300 transform hover:scale-105"
-              [class.text-white]="activeCategory() === category.id"
-              [class.border-transparent]="activeCategory() === category.id"
-              [class.shadow-lg]="activeCategory() === category.id"
-              [class.text-gray-700]="activeCategory() !== category.id"
-              [class.border-gray-200]="activeCategory() !== category.id"
-              [class.bg-white]="activeCategory() !== category.id"
-              [class.hover:border-gray-300]="activeCategory() !== category.id"
-              [class.hover:bg-gray-50]="activeCategory() !== category.id"
-              [ngClass]="activeCategory() === category.id ? category.gradient : ''">
-              <span class="text-lg">{{ category.icon }}</span>
-              <span class="font-medium">{{ category.name }}</span>
-              <span class="text-xs px-2 py-1 rounded-full"
-                    [class]="activeCategory() === category.id ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'">
-                {{ category.articleCount }}
-              </span>
-            </button>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <!-- Loading skeleton for categories -->
+            <ng-container *ngIf="loading(); else categoriesLoaded">
+              <app-card-skeleton
+                *ngFor="let i of [1,2,3,4,5,6]"
+                variant="category"
+                height="60px"
+                width="120px"
+                [showLoadingIndicator]="false"
+                theme="green"
+                rounded="xl">
+              </app-card-skeleton>
+            </ng-container>
+
+            <!-- Actual categories -->
+            <ng-template #categoriesLoaded>
+              <button
+                *ngFor="let category of categories(); trackBy: trackByCategory"
+                (click)="setActiveCategory(category.id)"
+                class="category-pill"
+                [class.active]="activeCategory() === category.id"
+                [ngClass]="getCategoryButtonClasses(category)">
+                <span class="pill-icon">{{ category.icon }}</span>
+                <span class="pill-name">{{ category.name }}</span>
+                <span class="pill-badge">{{ category.articleCount }}</span>
+              </button>
+            </ng-template>
           </div>
         </div>        <!-- Featured Story -->
-        <div class="mb-12" *ngIf="latestNews().length > 0">
-          <article class="bg-white">
-            <a [routerLink]="['/article', latestNews()[0].id]" class="block group">
-              <div class="mb-6">
-                <div class="flex items-center space-x-2 text-sm text-gray-500 mb-4">
-                  <span class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-medium">BREAKING</span>
-                  <span>{{ latestNews()[0].timeAgo }}</span>
-                </div>
-                <h1 class="text-4xl font-bold text-gray-900 mb-4 leading-tight group-hover:text-blue-600 transition-colors duration-200">
-                  {{ latestNews()[0].title }}
-                </h1>
-                <p class="text-xl text-gray-600 leading-relaxed mb-6">
-                  {{ latestNews()[0].excerpt }}
-                </p>
-              </div>
-            </a>
+        <div class="mb-12">
+          <!-- Loading skeleton for featured article -->
+          <ng-container *ngIf="loading(); else featuredLoaded">
+            <app-card-skeleton
+              variant="featured"
+              height="400px"
+              [showProgress]="true"
+              [showLoadingIndicator]="true"
+              theme="purple">
+            </app-card-skeleton>
+          </ng-container>
 
-            <!-- Article Stats -->
-            <div class="flex items-center space-x-6 text-sm text-gray-500 mb-8">
+          <!-- Actual featured article -->
+          <ng-template #featuredLoaded>
+            <article class="bg-white" *ngIf="getDisplayedArticles().length > 0">
+              <a [routerLink]="['/article', getDisplayedArticles()[0].slug]" class="block group">
+                <div class="mb-6">
+                  <div class="flex items-center space-x-2 text-sm text-gray-500 mb-4">
+                    <span class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-medium">BREAKING</span>
+                    <span>{{ getDisplayedArticles()[0].timeAgo }}</span>
+                  </div>
+                  <h1 class="text-4xl font-bold text-gray-900 mb-4 leading-tight group-hover:text-blue-600 transition-colors duration-200">
+                    {{ getDisplayedArticles()[0].title }}
+                  </h1>
+                  <p class="text-xl text-gray-600 leading-relaxed mb-6">
+                    {{ getDisplayedArticles()[0].excerpt }}
+                  </p>
+                </div>
+              </a>
+
+              <!-- Article Stats -->
+              <div class="flex items-center space-x-6 text-sm text-gray-500 mb-8">
               <span class="flex items-center space-x-1">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -114,6 +118,7 @@ interface NewsArticle {
               </span>
             </div>
           </article>
+          </ng-template>
         </div>
 
         <!-- Content Sections -->
@@ -127,9 +132,23 @@ interface NewsArticle {
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <article
-                *ngFor="let article of latestNews().slice(1); trackBy: trackByArticle"
-                class="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl px-8 pb-8 pt-40 w-full h-80 group cursor-pointer">
+              <!-- Loading skeleton for articles -->
+              <ng-container *ngIf="loading(); else articlesLoaded">
+                <app-card-skeleton
+                  *ngFor="let i of [1,2,3,4,5,6]"
+                  variant="article"
+                  height="320px"
+                  [showProgress]="true"
+                  [showLoadingIndicator]="true"
+                  theme="blue">
+                </app-card-skeleton>
+              </ng-container>
+
+              <!-- Actual articles -->
+              <ng-template #articlesLoaded>
+                <article
+                  *ngFor="let article of getDisplayedArticles().slice(1); trackBy: trackByArticle; let i = index"
+                  class="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl px-8 pb-8 pt-40 w-full h-80 group cursor-pointer">
 
                 <a [routerLink]="['/article', article.slug]" class="block h-full w-full">
                   <!-- Background image placeholder based on category -->
@@ -138,10 +157,10 @@ interface NewsArticle {
                     [alt]="article.category"
                     class="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500">
 
-                  <!-- Dynamic gradient overlay based on article ID for random colors -->
+                  <!-- Dynamic gradient overlay with enhanced variety -->
                   <div
-                    class="absolute inset-0 bg-gradient-to-t"
-                    [ngClass]="getRandomGradient(article.id)"></div>
+                    class="absolute inset-0 bg-gradient-to-t gradient-overlay"
+                    [ngClass]="getArticleGradientWithIntensity(article.id, i + 1)"></div>
 
                   <!-- Category badge -->
                   <div class="absolute top-4 left-4 z-10">
@@ -166,6 +185,7 @@ interface NewsArticle {
                   </div>
                 </a>
               </article>
+              </ng-template>
             </div>
           </section>
 
@@ -212,7 +232,7 @@ interface NewsArticle {
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <article
-                *ngFor="let article of getDisplayedArticles(); trackBy: trackByArticle"
+                *ngFor="let article of getDisplayedArticles(); trackBy: trackByArticle; let i = index"
                 class="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl px-8 pb-8 pt-40 w-full h-80 group cursor-pointer">
 
                 <a [routerLink]="['/article', article.slug]" class="block h-full w-full">
@@ -222,10 +242,10 @@ interface NewsArticle {
                     [alt]="article.category"
                     class="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500">
 
-                  <!-- Dynamic gradient overlay based on article ID for random colors -->
+                  <!-- Dynamic gradient overlay with enhanced variety based on position -->
                   <div
-                    class="absolute inset-0 bg-gradient-to-t"
-                    [ngClass]="getRandomGradient(article.id)"></div>
+                    class="absolute inset-0 bg-gradient-to-t gradient-overlay"
+                    [ngClass]="getArticleGradientWithIntensity(article.id, i)"></div>
 
                   <!-- Category badge -->
                   <div class="absolute top-4 left-4 z-10">
@@ -399,13 +419,81 @@ interface NewsArticle {
       overflow: hidden;
     }
 
-    /* Custom gradient classes */
     .bg-tech { @apply bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600; }
     .bg-business { @apply bg-gradient-to-br from-emerald-500 via-teal-500 to-green-600; }
     .bg-sports { @apply bg-gradient-to-br from-orange-500 via-red-500 to-pink-600; }
     .bg-world { @apply bg-gradient-to-br from-purple-500 via-pink-500 to-rose-600; }
     .bg-health { @apply bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600; }
     .bg-entertainment { @apply bg-gradient-to-br from-rose-500 via-pink-500 to-purple-600; }
+
+    /* Category Filter Pills - Clean & Compact */
+    .category-pill {
+      @apply inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-full border transition-all duration-200;
+      @apply bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100 hover:border-gray-300;
+      @apply cursor-pointer select-none outline-none focus:ring-2 focus:ring-blue-500/20;
+    }
+
+    .category-pill.active {
+      @apply bg-blue-600 border-blue-600 text-white shadow-sm;
+    }
+
+    .category-pill:hover:not(.active) {
+      @apply transform scale-105;
+    }
+
+    .pill-icon {
+      @apply text-sm leading-none;
+    }
+
+    .pill-name {
+      @apply font-medium truncate;
+    }
+
+    .pill-badge {
+      @apply text-xs px-1.5 py-0.5 rounded-full bg-gray-200 text-gray-600 font-medium;
+      @apply min-w-[18px] text-center leading-none;
+    }
+
+    .category-pill.active .pill-badge {
+      @apply bg-white/20 text-white;
+    }
+
+    /* Gradient Refresh Button */
+    .gradient-refresh-btn {
+      @apply text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 px-2 py-1 rounded-full;
+      @apply transition-all duration-200 cursor-pointer select-none;
+      @apply hover:scale-105 active:scale-95;
+    }
+
+    /* Enhanced gradient transitions */
+    .gradient-overlay {
+      @apply transition-all duration-700 ease-in-out;
+    }
+
+    .gradient-overlay:hover {
+      @apply opacity-90;
+    }
+
+    /* Legacy skeleton support (for other components) */
+    .common-skeleton {
+      @apply relative overflow-hidden rounded-2xl w-full h-80 bg-gray-200;
+      animation: pulse 2s infinite;
+    }
+
+    .skeleton-shimmer {
+      @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent;
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
 
     .badge-hot { @apply bg-red-500/90 text-white; }
     .badge-trending { @apply bg-orange-500/90 text-white; }
@@ -448,286 +536,94 @@ export class HomeComponent implements OnInit {
   isLoadingMore = signal<boolean>(false);
   activeCategory = signal<string>('all');
 
-  newsCategories = signal<NewsCategory[]>([
-    {
-      id: 'all',
-      name: 'All',
-      articleCount: '25',
-      badge: 'Live',
-      icon: '🏠',
-      gradient: 'bg-gradient-to-br from-slate-500 to-gray-600',
-      badgeColor: 'badge-live'
-    },
-    {
-      id: 'politics',
-      name: 'Politics',
-      articleCount: '8',
-      badge: 'Hot',
-      icon: '🏛️',
-      gradient: 'bg-gradient-to-br from-red-500 to-pink-600',
-      badgeColor: 'badge-hot'
-    },
-    {
-      id: 'tech',
-      name: 'Tech',
-      articleCount: '6',
-      badge: 'New',
-      icon: '💻',
-      gradient: 'bg-gradient-to-br from-blue-500 to-indigo-600',
-      badgeColor: 'badge-new'
-    },
-    {
-      id: 'business',
-      name: 'Business',
-      articleCount: '5',
-      badge: 'Trend',
-      icon: '📈',
-      gradient: 'bg-gradient-to-br from-green-500 to-emerald-600',
-      badgeColor: 'badge-trending'
-    },
-    {
-      id: 'world',
-      name: 'Global',
-      articleCount: '4',
-      badge: 'Breaking',
-      icon: '🌍',
-      gradient: 'bg-gradient-to-br from-purple-500 to-violet-600',
-      badgeColor: 'badge-breaking'
-    },
-    {
-      id: 'health',
-      name: 'Health',
-      articleCount: '2',
-      badge: 'Popular',
-      icon: '🏥',
-      gradient: 'bg-gradient-to-br from-emerald-500 to-teal-600',
-      badgeColor: 'badge-popular'
-    }
-  ]);
+  // Dynamic data signals
+  categories = signal<NewsCategory[]>([]);
+  allArticles = signal<NewsArticle[]>([]);
+  loading = signal<boolean>(false);
 
-  latestNews = signal<NewsArticle[]>([
-    {
-      id: '1',
-      slug: 'revolutionary-ai-system-achieves-human-level-reasoning',
-      title: 'Revolutionary AI System Achieves Human-Level Reasoning in Complex Tasks',
-      excerpt: 'Scientists at leading tech companies have developed an AI system that demonstrates unprecedented reasoning capabilities, potentially transforming multiple industries.',
-      category: 'Technology',
-      timeAgo: '2 hours ago',
-      readTime: '5 min read',
-      gradient: 'bg-tech',
-      isBreaking: true,
-      publishedDate: '2025-08-23T14:00:00Z',
-      publishedTimestamp: Date.now() - (2 * 60 * 60 * 1000),
-      author: 'Dr. Sarah Chen',
-      tags: ['AI', 'Technology', 'Innovation']
-    },
-    {
-      id: '2',
-      slug: 'global-markets-surge-economic-policy-changes',
-      title: 'Global Markets Surge Following Unexpected Economic Policy Changes',
-      excerpt: 'Financial markets worldwide experienced significant gains after major economies announced coordinated policy adjustments aimed at sustainable growth.',
-      category: 'Business',
-      timeAgo: '4 hours ago',
-      readTime: '3 min read',
-      gradient: 'bg-business',
-      publishedDate: '2024-12-15',
-      publishedTimestamp: 1734278400000,
-      author: 'Michael Rodriguez',
-      tags: ['Finance', 'Economy', 'Markets']
-    },
-    {
-      id: '3',
-      slug: 'championship-finals-break-viewership-records',
-      title: 'Championship Finals Break All-Time Viewership Records Globally',
-      excerpt: 'The most-watched sporting event in history captivated audiences across continents, setting new standards for sports entertainment and broadcasting.',
-      category: 'Sports',
-      timeAgo: '6 hours ago',
-      readTime: '4 min read',
-      gradient: 'bg-sports',
-      publishedDate: '2024-12-15',
-      publishedTimestamp: 1734271200000,
-      author: 'Jessica Thompson',
-      tags: ['Sports', 'Championship', 'Broadcasting']
-    },
-    {
-      id: '4',
-      slug: 'historic-climate-agreement-195-countries',
-      title: 'Historic Climate Agreement Signed by 195 Countries',
-      excerpt: 'World leaders unite in an unprecedented commitment to combat climate change with binding targets and innovative green technology initiatives.',
-      category: 'World News',
-      timeAgo: '8 hours ago',
-      readTime: '6 min read',
-      gradient: 'bg-world',
-      isBreaking: true,
-      publishedDate: '2024-12-15',
-      publishedTimestamp: 1734260400000,
-      author: 'Dr. Elena Vasquez',
-      tags: ['Climate', 'Environment', 'Policy']
-    },
-    {
-      id: '5',
-      slug: 'breakthrough-gene-therapy-rare-diseases',
-      title: 'Breakthrough Gene Therapy Shows Promise for Rare Diseases',
-      excerpt: 'Medical researchers announce successful trials of a revolutionary gene therapy that could treat previously incurable genetic disorders.',
-      category: 'Health',
-      timeAgo: '12 hours ago',
-      readTime: '4 min read',
-      gradient: 'bg-health',
-      publishedDate: '2024-12-14',
-      publishedTimestamp: 1734217200000,
-      author: 'Dr. Robert Kim',
-      tags: ['Health', 'Medicine', 'Gene Therapy']
-    },
-    {
-      id: '6',
-      slug: 'streaming-platform-largest-content-investment',
-      title: 'Streaming Platform Announces Largest Content Investment in History',
-      excerpt: 'Major entertainment company commits unprecedented funding to original programming, signaling a new era in digital entertainment.',
-      category: 'Entertainment',
-      timeAgo: '1 day ago',
-      readTime: '3 min read',
-      gradient: 'bg-entertainment',
-      publishedDate: '2024-12-14',
-      publishedTimestamp: 1734206400000,
-      author: 'Amanda Lee',
-      tags: ['Entertainment', 'Streaming', 'Media']
-    }
-  ]);
+  // Gradient manager for dynamic colors
+  private gradientManager = new GradientManager({
+    type: 'random',
+    intensities: ['800', '900']
+  });
 
-  moreNews = signal<NewsArticle[]>([
-    {
-      id: '7',
-      slug: 'quantum-computing-breakthrough-impossible-problems',
-      title: 'Quantum Computing Breakthrough Solves Previously Impossible Problems',
-      excerpt: 'Researchers demonstrate quantum supremacy with practical applications that could revolutionize cryptography and drug discovery.',
-      category: 'Technology',
-      timeAgo: '1 day ago',
-      readTime: '4 min read',
-      gradient: 'bg-tech',
-      publishedDate: '2024-12-14',
-      publishedTimestamp: 1734195600000,
-      author: 'Prof. David Zhang',
-      tags: ['Quantum Computing', 'Technology', 'Research']
-    },
-    {
-      id: '8',
-      slug: 'startup-unicorn-carbon-negative-operations',
-      title: 'Startup Unicorn Achieves Carbon Negative Operations',
-      excerpt: 'Innovative clean-tech company becomes first unicorn startup to achieve net-negative carbon emissions across all operations.',
-      category: 'Business',
-      timeAgo: '1 day ago',
-      readTime: '3 min read',
-      gradient: 'bg-business',
-      publishedDate: '2024-12-14',
-      publishedTimestamp: 1734184800000,
-      author: 'Lisa Martinez',
-      tags: ['Sustainability', 'Business', 'Startup']
-    },
-    {
-      id: '9',
-      slug: 'olympic-record-shattered-dramatic-final',
-      title: 'Olympic Record Shattered in Dramatic Final Performance',
-      excerpt: 'Athlete breaks 20-year-old world record in stunning final that had spectators on their feet worldwide.',
-      category: 'Sports',
-      timeAgo: '2 days ago',
-      readTime: '3 min read',
-      gradient: 'bg-sports',
-      publishedDate: '2024-12-13',
-      publishedTimestamp: 1734098400000,
-      author: 'Mark Johnson',
-      tags: ['Olympics', 'Sports', 'Records']
-    },
-    {
-      id: '10',
-      slug: 'archaeological-discovery-rewrites-ancient-history',
-      title: 'New Archaeological Discovery Rewrites Ancient History',
-      excerpt: 'Ancient civilization found with advanced technology that predates known historical timeline by thousands of years.',
-      category: 'World News',
-      timeAgo: '2 days ago',
-      readTime: '5 min read',
-      gradient: 'bg-world',
-      publishedDate: '2024-12-13',
-      publishedTimestamp: 1734087600000,
-      author: 'Dr. Rachel Adams',
-      tags: ['Archaeology', 'History', 'Discovery']
-    },
-    {
-      id: '11',
-      slug: 'revolutionary-treatment-cures-type1-diabetes',
-      title: 'Revolutionary Treatment Cures Type 1 Diabetes in Clinical Trial',
-      excerpt: 'Groundbreaking stem cell therapy shows 100% success rate in phase 2 trials, offering hope to millions of patients.',
-      category: 'Health',
-      timeAgo: '2 days ago',
-      readTime: '4 min read',
-      gradient: 'bg-health',
-      publishedDate: '2024-12-13',
-      publishedTimestamp: 1734076800000,
-      author: 'Dr. Jennifer Liu',
-      tags: ['Health', 'Diabetes', 'Medical Breakthrough']
-    },
-    {
-      id: '12',
-      slug: 'virtual-reality-concert-global-venues',
-      title: 'Virtual Reality Concert Sells Out Global Venues Simultaneously',
-      excerpt: 'First-ever synchronized VR concert experience brings together 10 million attendees across multiple virtual venues worldwide.',
-      category: 'Entertainment',
-      timeAgo: '3 days ago',
-      readTime: '3 min read',
-      gradient: 'bg-entertainment',
-      publishedDate: '2024-12-12',
-      publishedTimestamp: 1734012000000,
-      author: 'Chris Walker',
-      tags: ['VR', 'Entertainment', 'Technology']
-    },
-    {
-      id: '13',
-      slug: 'space-mining-mission-rare-earth-elements',
-      title: 'Space Mining Mission Returns with Rare Earth Elements',
-      excerpt: 'First commercial asteroid mining operation successfully delivers precious metals back to Earth, opening new economic frontiers.',
-      category: 'Technology',
-      timeAgo: '3 days ago',
-      readTime: '5 min read',
-      gradient: 'bg-tech',
-      publishedDate: '2024-12-12',
-      publishedTimestamp: 1733998800000,
-      author: 'Captain Alex Rivera',
-      tags: ['Space', 'Mining', 'Technology']
-    },
-    {
-      id: '14',
-      slug: 'renewable-energy-grid-powers-entire-nation',
-      title: 'Renewable Energy Grid Powers Entire Nation for First Time',
-      excerpt: 'Small European country becomes first to run exclusively on renewable energy for 30 consecutive days.',
-      category: 'World News',
-      timeAgo: '3 days ago',
-      readTime: '4 min read',
-      gradient: 'bg-world',
-      publishedDate: '2024-12-12',
-      publishedTimestamp: 1733985600000,
-      author: 'Dr. Klaus Schmidt',
-      tags: ['Renewable Energy', 'Environment', 'Sustainability']
-    },
-    {
-      id: '15',
-      slug: 'mental-health-app-reduces-depression',
-      title: 'Mental Health App Reduces Depression by 80% in Studies',
-      excerpt: 'AI-powered mental health platform shows remarkable success rates in treating depression and anxiety disorders.',
-      category: 'Health',
-      timeAgo: '4 days ago',
-      readTime: '4 min read',
-      gradient: 'bg-health',
-      publishedDate: '2024-12-11',
-      publishedTimestamp: 1733908800000,
-      author: 'Dr. Priya Patel',
-      tags: ['Mental Health', 'Technology', 'Healthcare']
-    }
-  ]);
+  // Cache for article gradients to maintain consistency
+  private articleGradientCache = new Map<string, string>();
+
+
+
+
+
+
 
   ngOnInit(): void {
     this.initializeSEO();
+    this.loadData();
     this.updateCurrentTime();
     // Update time every minute
     setInterval(() => this.updateCurrentTime(), 60000);
+  }
+
+  private loadData(): void {
+    this.loading.set(true);
+
+    // Load categories and articles from the service
+    this.dataService.getCategories().subscribe({
+      next: (response) => {
+        if (response.status === 'success') {
+          // Add 'All' category for filtering
+          const allCategory: NewsCategory = {
+            id: 'all',
+            name: 'All',
+            slug: 'all',
+            description: 'All news categories',
+            articleCount: 0, // Will be updated after articles load
+            badge: 'Live',
+            icon: '🏠',
+            gradient: 'bg-gradient-to-br from-slate-500 to-gray-600',
+            badgeColor: 'bg-blue-500',
+            isActive: true
+          };
+
+          this.categories.set([allCategory, ...response.data]);
+        }
+      },
+      error: (error) => {
+        console.error('Error loading categories:', error);
+        this.loading.set(false);
+      }
+    });
+
+    // Load articles
+    this.dataService.getArticles().subscribe({
+      next: (response) => {
+        if (response.status === 'success') {
+          this.allArticles.set(response.data);
+          this.updateCategoryArticleCounts();
+        }
+        this.loading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading articles:', error);
+        this.loading.set(false);
+      }
+    });
+  }
+
+  private updateCategoryArticleCounts(): void {
+    const articles = this.allArticles();
+    const categories = this.categories();
+
+    const updatedCategories = categories.map(category => {
+      if (category.id === 'all') {
+        return { ...category, articleCount: articles.length };
+      }
+
+      const count = articles.filter(article => article.category === category.id).length;
+      return { ...category, articleCount: count };
+    });
+
+    this.categories.set(updatedCategories);
   }
 
   private updateCurrentTime(): void {
@@ -744,7 +640,7 @@ export class HomeComponent implements OnInit {
   }
 
   getArticleCount(): number {
-    return this.latestNews().length + this.moreNews().length;
+    return this.allArticles().length;
   }
 
   getQuoteCount(): number {
@@ -807,59 +703,226 @@ export class HomeComponent implements OnInit {
   }
 
   getRandomGradient(articleId: string): string {
-    // Create deterministic but unique gradients based on article ID
-    // Ensures no color repeats until at least 20 posts
-    const gradients = [
-      'from-purple-900 via-purple-900/40',
-      'from-pink-900 via-pink-900/40',
-      'from-red-900 via-red-900/40',
-      'from-orange-900 via-orange-900/40',
-      'from-amber-900 via-amber-900/40',
-      'from-yellow-900 via-yellow-900/40',
-      'from-lime-900 via-lime-900/40',
-      'from-green-900 via-green-900/40',
-      'from-emerald-900 via-emerald-900/40',
-      'from-teal-900 via-teal-900/40',
-      'from-cyan-900 via-cyan-900/40',
-      'from-sky-900 via-sky-900/40',
-      'from-blue-900 via-blue-900/40',
-      'from-indigo-900 via-indigo-900/40',
-      'from-violet-900 via-violet-900/40',
-      'from-fuchsia-900 via-fuchsia-900/40',
-      'from-rose-900 via-rose-900/40',
-      'from-slate-900 via-slate-900/40',
-      'from-gray-900 via-gray-900/40',
-      'from-zinc-900 via-zinc-900/40',
-      // Additional 20 unique gradients for better distribution
-      'from-red-800 via-red-800/40',
-      'from-orange-800 via-orange-800/40',
-      'from-amber-800 via-amber-800/40',
-      'from-yellow-800 via-yellow-800/40',
-      'from-lime-800 via-lime-800/40',
-      'from-green-800 via-green-800/40',
-      'from-emerald-800 via-emerald-800/40',
-      'from-teal-800 via-teal-800/40',
-      'from-cyan-800 via-cyan-800/40',
-      'from-sky-800 via-sky-800/40',
-      'from-blue-800 via-blue-800/40',
-      'from-indigo-800 via-indigo-800/40',
-      'from-violet-800 via-violet-800/40',
-      'from-purple-800 via-purple-800/40',
-      'from-fuchsia-800 via-fuchsia-800/40',
-      'from-pink-800 via-pink-800/40',
-      'from-rose-800 via-rose-800/40',
-      'from-slate-800 via-slate-800/40',
-      'from-gray-800 via-gray-800/40',
-      'from-zinc-800 via-zinc-800/40'
+    // Check cache first to maintain consistency for the same article
+    if (this.articleGradientCache.has(articleId)) {
+      return this.articleGradientCache.get(articleId)!;
+    }
+
+    // Generate different gradient types based on article ID for variety
+    const numericId = parseInt(articleId) || articleId.length;
+    let gradient: string;
+
+    // Use stable gradient generation based on article ID
+    const gradientTypes = [
+      { type: 'vibrant', colors: ['purple', 'violet', 'fuchsia', 'indigo'] },
+      { type: 'cool', colors: ['blue', 'cyan', 'teal', 'sky'] },
+      { type: 'warm', colors: ['red', 'orange', 'yellow', 'pink'] },
+      { type: 'nature', colors: ['green', 'emerald', 'lime', 'teal'] },
+      { type: 'royal', colors: ['purple', 'indigo', 'violet', 'blue'] }
     ];
 
-    // Extract numeric ID from article ID (assuming format like '1', '2', etc.)
-    const numericId = parseInt(articleId) || 0;
+    const typeIndex = numericId % gradientTypes.length;
+    const selectedType = gradientTypes[typeIndex];
+    const colorIndex = Math.floor(numericId / gradientTypes.length) % selectedType.colors.length;
+    const selectedColor = selectedType.colors[colorIndex];
 
-    // Use modulo to ensure unique colors for first 40 articles, then repeat
-    const colorIndex = numericId % gradients.length;
+    // Generate stable gradient based on selection
+    const intensity = ['800', '900'][numericId % 2];
+    const opacity = [30, 40, 50][numericId % 3];
 
-    return gradients[colorIndex];
+    gradient = `from-${selectedColor}-${intensity} via-${selectedColor}-${intensity}/${opacity}`;
+
+    this.articleGradientCache.set(articleId, gradient);
+    return gradient;
+  }
+
+
+
+  // Generate gradient for category cards with different themes
+  getCategoryGradient(categoryId: string): string {
+    const categoryGradients: { [key: string]: () => string } = {
+      'all': () => GradientGenerators.monochrome(),
+      'Politics': () => GradientGenerators.subtle(),
+      'Technology': () => GradientGenerators.cool(),
+      'Business': () => GradientGenerators.warm(),
+      'Environment': () => generateRandomGradient({
+        colors: ['green', 'emerald', 'teal'],
+        type: 'dual-color'
+      }),
+      'Finance': () => generateRandomGradient({
+        colors: ['amber', 'yellow', 'orange'],
+        type: 'dual-color'
+      }),
+      'Science': () => generateRandomGradient({
+        colors: ['purple', 'indigo', 'violet'],
+        type: 'dual-color'
+      }),
+      'Sports': () => generateRandomGradient({
+        colors: ['red', 'orange', 'pink'],
+        type: 'dual-color'
+      }),
+      'Health': () => generateRandomGradient({
+        colors: ['emerald', 'green', 'teal'],
+        type: 'dual-color'
+      }),
+      'Entertainment': () => generateRandomGradient({
+        colors: ['pink', 'fuchsia', 'purple'],
+        type: 'dual-color'
+      }),
+      'Education': () => generateRandomGradient({
+        colors: ['blue', 'indigo', 'sky'],
+        type: 'dual-color'
+      }),
+      'World News': () => GradientGenerators.vibrant()
+    };
+
+    return categoryGradients[categoryId]?.() || GradientGenerators.subtle();
+  }
+
+  // Generate gradient with intensity based on article position/importance
+  getArticleGradientWithIntensity(articleId: string, index: number): string {
+    // Create a unique cache key combining article ID and index
+    const cacheKey = `${articleId}-${index}`;
+
+    // Check cache first to ensure stability
+    if (this.articleGradientCache.has(cacheKey)) {
+      return this.articleGradientCache.get(cacheKey)!;
+    }
+
+    let gradient: string;
+
+    // First article (featured) gets more vibrant gradient
+    if (index === 0) {
+      gradient = this.getRandomGradient(articleId) || this.generateStableGradient('vibrant', articleId);
+    } else {
+      // Alternate between different gradient styles for visual variety
+      const position = index % 4;
+      switch (position) {
+        case 0:
+          gradient = this.getRandomGradient(articleId);
+          break;
+        case 1:
+          gradient = this.generateStableGradient('cool', articleId);
+          break;
+        case 2:
+          gradient = this.generateStableGradient('warm', articleId);
+          break;
+        default:
+          gradient = this.generateStableGradient('vibrant', articleId);
+          break;
+      }
+    }
+
+    // Cache the result for stability
+    this.articleGradientCache.set(cacheKey, gradient);
+    return gradient;
+  }
+
+  // Generate a stable gradient based on type and seed
+  private generateStableGradient(type: string, seed: string): string {
+    const cacheKey = `${type}-${seed}`;
+
+    if (this.articleGradientCache.has(cacheKey)) {
+      return this.articleGradientCache.get(cacheKey)!;
+    }
+
+    // Generate stable gradients based on type and seed
+    const numericSeed = parseInt(seed) || seed.length;
+    let gradient: string;
+
+    switch (type) {
+      case 'cool':
+        const coolColors = ['blue', 'indigo', 'cyan', 'teal', 'sky'];
+        const coolIndex = numericSeed % coolColors.length;
+        gradient = `from-${coolColors[coolIndex]}-800 via-${coolColors[coolIndex]}-800/40`;
+        break;
+      case 'warm':
+        const warmColors = ['red', 'orange', 'yellow', 'pink', 'rose'];
+        const warmIndex = numericSeed % warmColors.length;
+        gradient = `from-${warmColors[warmIndex]}-800 via-${warmColors[warmIndex]}-800/40`;
+        break;
+      case 'vibrant':
+        const vibrantColors = ['purple', 'violet', 'fuchsia', 'emerald', 'amber'];
+        const vibrantIndex = numericSeed % vibrantColors.length;
+        gradient = `from-${vibrantColors[vibrantIndex]}-900 via-${vibrantColors[vibrantIndex]}-900/50`;
+        break;
+      default:
+        gradient = 'from-gray-800 via-gray-800/40';
+        break;
+    }
+
+    this.articleGradientCache.set(cacheKey, gradient);
+    return gradient;
+  }
+
+  // Generate theme-based gradients for special sections
+  getThematicGradient(theme: 'breaking' | 'trending' | 'featured' | 'latest'): string {
+    const themeGradients = {
+      'breaking': () => generateRandomGradient({
+        colors: ['red', 'orange', 'rose'],
+        type: 'dual-color',
+        intensities: ['800', '900']
+      }),
+      'trending': () => generateRandomGradient({
+        colors: ['purple', 'fuchsia', 'pink'],
+        type: 'triple-color',
+        intensities: ['800', '900']
+      }),
+      'featured': () => GradientGenerators.vibrant(),
+      'latest': () => generateRandomGradient({
+        colors: ['blue', 'indigo', 'sky'],
+        type: 'dual-color',
+        intensities: ['800', '900']
+      })
+    };
+
+    return themeGradients[theme]();
+  }
+
+  // Dynamic gradient that changes based on time of day or special themes
+  getContextualGradient(articleId: string, category: string): string {
+    const hour = new Date().getHours();
+
+    // Morning gradients (6-12)
+    if (hour >= 6 && hour < 12) {
+      return generateRandomGradient({
+        colors: ['yellow', 'orange', 'amber'],
+        type: 'dual-color',
+        opacityRange: { min: 20, max: 40 }
+      });
+    }
+
+    // Afternoon gradients (12-18)
+    if (hour >= 12 && hour < 18) {
+      return generateRandomGradient({
+        colors: ['blue', 'sky', 'cyan'],
+        type: 'dual-color',
+        opacityRange: { min: 30, max: 50 }
+      });
+    }
+
+    // Evening/Night gradients (18-6)
+    return generateRandomGradient({
+      colors: ['purple', 'indigo', 'violet'],
+      type: 'triple-color',
+      opacityRange: { min: 40, max: 60 }
+    });
+  }
+
+  // Get different gradient based on article importance and position
+  getSmartGradient(article: NewsArticle, index: number): string {
+    // Use time-based contextual gradients for featured articles
+    if (index === 0) {
+      return this.getContextualGradient(article.id, article.category);
+    }
+
+    // Use category-specific gradients for category-focused articles
+    if (article.category && article.category !== 'General') {
+      return this.getCategoryGradient(article.category);
+    }
+
+    // Use position-based variety for regular articles
+    return this.getArticleGradientWithIntensity(article.id, index);
   }
 
   trackByCategory(index: number, category: NewsCategory): string {
@@ -885,13 +948,12 @@ export class HomeComponent implements OnInit {
 
   // Get all articles sorted by date
   getAllSortedArticles(): NewsArticle[] {
-    const allArticles = [...this.latestNews(), ...this.moreNews()];
+    const allArticles = this.allArticles();
 
     // Filter by category first
     let filteredArticles = allArticles;
     if (this.activeCategory() !== 'all') {
-      const activeCategoryName = this.getActiveCategoryName();
-      filteredArticles = allArticles.filter(article => article.category === activeCategoryName);
+      filteredArticles = allArticles.filter(article => article.category === this.activeCategory());
     }
 
     // Then sort
@@ -939,7 +1001,7 @@ export class HomeComponent implements OnInit {
 
   // Get active category name
   getActiveCategoryName(): string {
-    const activeCat = this.newsCategories().find(cat => cat.id === this.activeCategory());
+    const activeCat = this.categories().find(cat => cat.id === this.activeCategory());
     return activeCat ? activeCat.name : 'All Categories';
   }
 
@@ -950,7 +1012,8 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private seoService: SeoService
+    private seoService: SeoService,
+    private dataService: DataService
   ) {}
 
   private initializeSEO(): void {
@@ -994,5 +1057,11 @@ export class HomeComponent implements OnInit {
   // Navigate to article detail page using slug
   navigateToArticle(slug: string): void {
     this.router.navigate(['/article', slug]);
+  }
+
+  // Get dynamic classes for category buttons
+  getCategoryButtonClasses(category: NewsCategory): string {
+    // Return empty string since we use a single blue color for all active states
+    return '';
   }
 }

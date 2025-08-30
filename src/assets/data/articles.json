@@ -1,0 +1,230 @@
+{
+  "articles": [
+    {
+      "id": "1",
+      "slug": "ai-policy-framework-2024",
+      "title": "New AI Policy Framework Shapes Future of Technology Governance",
+      "excerpt": "Government unveils comprehensive AI governance framework addressing ethics, safety, and innovation in the rapidly evolving artificial intelligence landscape.",
+      "content": "<p>The government has unveiled a groundbreaking AI policy framework that promises to reshape how artificial intelligence is governed and regulated. This comprehensive approach addresses key concerns around ethics, safety, and innovation while fostering technological advancement.</p><p>The framework introduces new standards for AI development, deployment, and monitoring, ensuring that emerging technologies serve the public interest while maintaining competitive innovation.</p><p>Key provisions include mandatory AI impact assessments, ethical review boards, and transparency requirements for AI systems used in critical sectors such as healthcare, finance, and criminal justice.</p>",
+      "category": "technology",
+      "subcategory": "ai",
+      "timeAgo": "2 hours ago",
+      "readTime": "5 min read",
+      "gradient": "bg-gradient-to-r from-blue-500 to-purple-600",
+      "isBreaking": true,
+      "isFeatured": true,
+      "publishedDate": "2024-08-26T10:30:00Z",
+      "publishedTimestamp": 1724668200000,
+      "modifiedDate": "2024-08-26T10:30:00Z",
+      "author": {
+        "id": "emily-davis",
+        "name": "Emily Davis",
+        "bio": "Technology Policy Analyst covering AI governance, privacy regulations, and digital innovation.",
+        "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
+      },
+      "tags": ["AI", "technology", "governance", "policy", "regulation", "ethics"],
+      "image": {
+        "url": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop",
+        "alt": "AI and Technology Policy Framework",
+        "caption": "New AI governance framework addresses key concerns around ethics and safety",
+        "width": 800,
+        "height": 400
+      },
+      "seo": {
+        "metaTitle": "New AI Policy Framework 2024 - Technology Governance | PolicyDrift",
+        "metaDescription": "Government unveils comprehensive AI governance framework addressing ethics, safety, and innovation in artificial intelligence.",
+        "keywords": ["AI policy", "technology governance", "artificial intelligence regulation", "AI ethics", "tech policy 2024"],
+        "ogImage": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=630&fit=crop"
+      },
+      "stats": {
+        "views": 15420,
+        "likes": 342,
+        "shares": 89,
+        "comments": 56,
+        "readingTime": 5,
+        "wordCount": 850
+      },
+      "relatedArticles": ["2", "4", "7"]
+    },
+    {
+      "id": "2",
+      "slug": "healthcare-reform-initiative",
+      "title": "Healthcare Reform Initiative Promises Universal Coverage",
+      "excerpt": "Comprehensive healthcare reform aims to provide universal coverage while reducing costs and improving quality of care for all citizens.",
+      "content": "<p>A sweeping healthcare reform initiative has been announced, promising to transform the healthcare landscape with universal coverage and improved accessibility. The reform addresses long-standing issues of healthcare inequality and affordability.</p><p>The initiative includes provisions for expanded Medicaid, prescription drug price controls, and investment in preventive care programs. Healthcare experts predict this could be the most significant reform since the establishment of Medicare.</p><p>Implementation will be phased over three years, with immediate measures including emergency funding for community health centers and telemedicine expansion programs.</p>",
+      "category": "health",
+      "subcategory": "policy",
+      "timeAgo": "4 hours ago",
+      "readTime": "7 min read",
+      "gradient": "bg-gradient-to-r from-green-500 to-teal-600",
+      "isBreaking": false,
+      "isFeatured": true,
+      "publishedDate": "2024-08-26T08:15:00Z",
+      "publishedTimestamp": 1724660100000,
+      "author": {
+        "id": "michael-brown",
+        "name": "Michael Brown",
+        "bio": "Healthcare Policy Researcher focusing on public health initiatives and medical policy analysis.",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+      },
+      "tags": ["healthcare", "reform", "universal coverage", "policy", "medical", "insurance"],
+      "image": {
+        "url": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800&h=400&fit=crop",
+        "alt": "Healthcare Reform and Universal Coverage",
+        "caption": "New healthcare reform initiative aims for universal coverage",
+        "width": 800,
+        "height": 400
+      },
+      "seo": {
+        "metaTitle": "Healthcare Reform Initiative - Universal Coverage Plan | PolicyDrift",
+        "metaDescription": "Comprehensive healthcare reform aims to provide universal coverage while reducing costs and improving quality of care.",
+        "keywords": ["healthcare reform", "universal coverage", "medical policy", "health insurance", "healthcare policy 2024"],
+        "ogImage": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=1200&h=630&fit=crop"
+      },
+      "stats": {
+        "views": 12840,
+        "likes": 298,
+        "shares": 76,
+        "comments": 43,
+        "readingTime": 7,
+        "wordCount": 1120
+      },
+      "relatedArticles": ["3", "5", "8"]
+    },
+    {
+      "id": "3",
+      "slug": "economic-policy-inflation-control",
+      "title": "Economic Policy Measures Target Inflation Control",
+      "excerpt": "Central bank announces new monetary policy measures designed to combat rising inflation while maintaining economic growth and employment stability.",
+      "content": "<p>The central bank has unveiled a comprehensive set of monetary policy measures aimed at controlling inflation while preserving economic stability. These measures represent a balanced approach to addressing current economic challenges.</p><p>Key policy changes include adjustments to interest rates, reserve requirements, and quantitative easing programs. The bank emphasizes the importance of maintaining employment levels while curbing inflationary pressures.</p><p>Economic analysts predict these measures will help stabilize prices over the next 12-18 months, with particular attention to housing, energy, and food costs that have been driving inflation.</p>",
+      "category": "economy",
+      "subcategory": "policy",
+      "timeAgo": "6 hours ago",
+      "readTime": "6 min read",
+      "gradient": "bg-gradient-to-r from-red-500 to-pink-600",
+      "isBreaking": false,
+      "isFeatured": false,
+      "publishedDate": "2024-08-26T06:45:00Z",
+      "publishedTimestamp": 1724654700000,
+      "author": {
+        "id": "sarah-johnson",
+        "name": "Sarah Johnson",
+        "bio": "Economic Policy Expert specializing in fiscal policy, market analysis, and economic trends.",
+        "avatar": "https://images.unsplash.com/photo-1494790108755-2616b612b29c?w=150&h=150&fit=crop&crop=face"
+      },
+      "tags": ["economy", "inflation", "monetary policy", "central bank", "interest rates", "economic growth"],
+      "image": {
+        "url": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=400&fit=crop",
+        "alt": "Economic Policy and Inflation Control Measures",
+        "caption": "Central bank announces new measures to combat inflation",
+        "width": 800,
+        "height": 400
+      },
+      "seo": {
+        "metaTitle": "Economic Policy Measures Target Inflation Control | PolicyDrift",
+        "metaDescription": "Central bank announces new monetary policy measures to combat rising inflation while maintaining economic growth.",
+        "keywords": ["economic policy", "inflation control", "monetary policy", "central bank", "interest rates", "economic growth"],
+        "ogImage": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&h=630&fit=crop"
+      },
+      "stats": {
+        "views": 9670,
+        "likes": 187,
+        "shares": 54,
+        "comments": 29,
+        "readingTime": 6,
+        "wordCount": 980
+      },
+      "relatedArticles": ["4", "6", "9"]
+    },
+    {
+      "id": "4",
+      "slug": "education-funding-reform",
+      "title": "Education Funding Reform Addresses Inequality",
+      "excerpt": "New education funding formula aims to reduce inequality between districts while increasing overall investment in schools and teachers.",
+      "content": "<p>A landmark education funding reform has been approved, introducing a new formula designed to address longstanding inequalities between school districts. The reform represents the most significant change to education funding in decades.</p><p>The new system will redistribute resources more equitably, with increased funding for underserved communities and rural areas. Additional provisions include teacher salary increases, infrastructure improvements, and technology upgrades.</p><p>Education advocates have praised the reform as a crucial step toward ensuring all students have access to quality education, regardless of their zip code. Implementation begins next academic year.</p>",
+      "category": "education",
+      "subcategory": "funding",
+      "timeAgo": "8 hours ago",
+      "readTime": "5 min read",
+      "gradient": "bg-gradient-to-r from-yellow-500 to-orange-600",
+      "isBreaking": false,
+      "isFeatured": false,
+      "publishedDate": "2024-08-26T04:20:00Z",
+      "publishedTimestamp": 1724645200000,
+      "author": {
+        "id": "robert-wilson",
+        "name": "Robert Wilson",
+        "bio": "Education Policy Expert with focus on academic research, funding policies, and educational reforms.",
+        "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face"
+      },
+      "tags": ["education", "funding", "schools", "inequality", "teachers", "reform"],
+      "image": {
+        "url": "https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=800&h=400&fit=crop",
+        "alt": "Education Funding Reform and School Investment",
+        "caption": "New funding formula addresses inequality between school districts",
+        "width": 800,
+        "height": 400
+      },
+      "seo": {
+        "metaTitle": "Education Funding Reform Addresses Inequality | PolicyDrift",
+        "metaDescription": "New education funding formula aims to reduce inequality between districts while increasing investment in schools.",
+        "keywords": ["education funding", "school reform", "education inequality", "teacher salaries", "education policy"],
+        "ogImage": "https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=1200&h=630&fit=crop"
+      },
+      "stats": {
+        "views": 7890,
+        "likes": 156,
+        "shares": 42,
+        "comments": 31,
+        "readingTime": 5,
+        "wordCount": 750
+      },
+      "relatedArticles": ["1", "5", "10"]
+    },
+    {
+      "id": "5",
+      "slug": "climate-policy-green-transition",
+      "title": "Climate Policy Accelerates Green Energy Transition",
+      "excerpt": "Ambitious climate policy package includes massive investments in renewable energy, carbon pricing, and green infrastructure development.",
+      "content": "<p>A comprehensive climate policy package has been unveiled, featuring unprecedented investments in renewable energy and green infrastructure. The policy aims to accelerate the transition away from fossil fuels while creating new economic opportunities.</p><p>Key components include carbon pricing mechanisms, subsidies for renewable energy projects, and support for green technology innovation. The package also addresses just transition concerns for workers in traditional energy sectors.</p><p>Environmental groups have largely welcomed the policy, though some call for even more aggressive targets. The plan sets a goal of achieving net-zero emissions by 2050 with significant milestones every five years.</p>",
+      "category": "environment",
+      "subcategory": "climate",
+      "timeAgo": "10 hours ago",
+      "readTime": "8 min read",
+      "gradient": "bg-gradient-to-r from-emerald-500 to-green-600",
+      "isBreaking": false,
+      "isFeatured": true,
+      "publishedDate": "2024-08-26T02:10:00Z",
+      "publishedTimestamp": 1724637000000,
+      "author": {
+        "id": "john-smith",
+        "name": "John Smith",
+        "bio": "Senior Political Analyst with 15 years of experience covering government policy and political developments.",
+        "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+      },
+      "tags": ["climate", "environment", "renewable energy", "carbon pricing", "green transition", "sustainability"],
+      "image": {
+        "url": "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&h=400&fit=crop",
+        "alt": "Climate Policy and Green Energy Transition",
+        "caption": "New climate policy accelerates renewable energy investments",
+        "width": 800,
+        "height": 400
+      },
+      "seo": {
+        "metaTitle": "Climate Policy Accelerates Green Energy Transition | PolicyDrift",
+        "metaDescription": "Ambitious climate policy package includes massive investments in renewable energy and green infrastructure development.",
+        "keywords": ["climate policy", "green energy", "renewable energy", "carbon pricing", "climate change", "sustainability"],
+        "ogImage": "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=1200&h=630&fit=crop"
+      },
+      "stats": {
+        "views": 11250,
+        "likes": 278,
+        "shares": 92,
+        "comments": 67,
+        "readingTime": 8,
+        "wordCount": 1200
+      },
+      "relatedArticles": ["6", "7", "8"]
+    }
+  ]
+}
