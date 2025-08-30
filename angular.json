@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "signal-tutorial": {
+    "policydrift": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "signal-tutorial:build:production"
+              "buildTarget": "policydrift:build:production"
             },
             "development": {
-              "buildTarget": "signal-tutorial:build:development"
+              "buildTarget": "policydrift:build:development"
             }
           },
           "defaultConfiguration": "development"
