@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
     this.checkForUpdates();
   }
 
+
   private initializeGlobalSEO(): void {
     this.seoService.updateSeoTags({
       title: 'PolicyDrift - AI-powered Policy Insights & Political Analysis',
