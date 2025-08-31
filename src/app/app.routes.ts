@@ -31,24 +31,6 @@ export const routes: Routes = [
     loadComponent: () => import('./features/about/about.component').then(m => m.AboutComponent),
     title: 'About Us - PolicyDrift'
   },
-  // SEO Files - Multiple routes for better compatibility
-  {
-    path: 'robots.txt',
-    loadComponent: () => import('./shared/components/seo-files/seo-files.component').then(m => m.SeoFilesComponent)
-  },
-  {
-    path: 'sitemap.xml',
-    loadComponent: () => import('./shared/components/seo-files/seo-files.component').then(m => m.SeoFilesComponent)
-  },
-  // Alternative routes for better compatibility
-  {
-    path: 'robots',
-    loadComponent: () => import('./shared/components/seo-files/seo-files.component').then(m => m.SeoFilesComponent)
-  },
-  {
-    path: 'sitemap',
-    loadComponent: () => import('./shared/components/seo-files/seo-files.component').then(m => m.SeoFilesComponent)
-  },
   {
     path: '**',
     redirectTo: ''

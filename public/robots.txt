@@ -7,7 +7,7 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 
-# Dynamic sitemap - will be served by Angular routes
+# Static sitemap with proper XML content
 Sitemap: https://policydrift.live/sitemap.xml
 
 # Allow all search engines to crawl

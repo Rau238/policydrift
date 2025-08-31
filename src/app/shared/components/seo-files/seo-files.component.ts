@@ -83,4 +83,18 @@ export class SeoFilesComponent implements OnInit {
     meta.setAttribute('content', contentType);
     document.head.appendChild(meta);
   }
+
+  private serveRawContent(content: string, contentType: string): void {
+    // For sitemap.xml, replace the entire page content with raw XML
+    if (contentType.includes('xml')) {
+      // Clear the page and set raw XML content
+      document.documentElement.innerHTML = '';
+      document.body.innerHTML = '';
+      
+      // Write the raw XML content directly
+      document.open();
+      document.write(content);
+      document.close();
+    }
+  }
 }
