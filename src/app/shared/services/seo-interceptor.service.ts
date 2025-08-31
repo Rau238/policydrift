@@ -1,40 +1,51 @@
-import { Injectable } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs/operators';
-import { SeoService } from './seo.service';
+import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent, HttpResponse } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { inject } from '@angular/core';
+import { SitemapService } from './sitemap.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class SeoInterceptorService {
+export const seoInterceptor: HttpInterceptorFn = (
+  request: HttpRequest<unknown>,
+  next: HttpHandlerFn
+): Observable<HttpEvent<unknown>> => {
+  const sitemapService = inject(SitemapService);
 
-  constructor(
-    private router: Router,
-    private seoService: SeoService
-  ) {
-    this.initializeRouteListener();
+  // Handle robots.txt requests
+  if (request.url.includes('/robots.txt')) {
+    const robotsContent = sitemapService.generateRobotsTxt();
+    const response = new HttpResponse({
+      body: robotsContent,
+      status: 200,
+      headers: request.headers.set('Content-Type', 'text/plain')
+    });
+    return of(response);
   }
 
-  private initializeRouteListener(): void {
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        this.handleRouteChange(event.url);
+  // Handle sitemap.xml requests
+  if (request.url.includes('/sitemap.xml')) {
+    return new Observable(observer => {
+      sitemapService.generateSitemap().subscribe({
+        next: (sitemapContent: string) => {
+          const response = new HttpResponse({
+            body: sitemapContent,
+            status: 200,
+            headers: request.headers.set('Content-Type', 'application/xml')
+          });
+          observer.next(response);
+          observer.complete();
+        },
+        error: (error: any) => {
+          const errorResponse = new HttpResponse({
+            body: 'Error generating sitemap',
+            status: 500,
+            headers: request.headers.set('Content-Type', 'text/plain')
+          });
+          observer.next(errorResponse);
+          observer.complete();
+        }
       });
+    });
   }
 
-  private handleRouteChange(url: string): void {
-    // Scroll to top on route change
-    window.scrollTo(0, 0);
-
-    // Update canonical URL
-    this.seoService.updateCanonicalUrl(`https://policydrift.live${url}`);
-
-    // Add page-specific tracking if needed
-    if (typeof (window as any).gtag !== 'undefined') {
-      (window as any).gtag('config', 'GA_MEASUREMENT_ID', {
-        page_path: url
-      });
-    }
-  }
-}
+  // Continue with normal request handling
+  return next(request);
+};

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { DataService } from './data.service';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -6,39 +8,46 @@ import { Injectable } from '@angular/core';
 export class SitemapService {
   private baseUrl = 'https://policydrift.live';
 
-  generateSitemap(): string {
-    const urls = [
-      { loc: this.baseUrl, priority: '1.0', changefreq: 'daily' },
-      { loc: `${this.baseUrl}/all-articles`, priority: '0.9', changefreq: 'daily' },
-      { loc: `${this.baseUrl}/about`, priority: '0.7', changefreq: 'monthly' },
-      { loc: `${this.baseUrl}/terms`, priority: '0.5', changefreq: 'yearly' },
-      { loc: `${this.baseUrl}/privacy`, priority: '0.5', changefreq: 'yearly' }
-    ];
+  constructor(private dataService: DataService) {}
 
-    // Add article URLs (this would come from your data service)
-    const articles = this.getArticleSlugs();
-    articles.forEach(slug => {
-      urls.push({
-        loc: `${this.baseUrl}/article/${slug}`,
-        priority: '0.8',
-        changefreq: 'weekly'
-      });
-    });
+  generateSitemap(): Observable<string> {
+    return this.dataService.getArticles().pipe(
+      map(response => {
+        const urls = [
+          { loc: this.baseUrl, priority: '1.0', changefreq: 'daily' },
+          { loc: `${this.baseUrl}/all-articles`, priority: '0.9', changefreq: 'daily' },
+          { loc: `${this.baseUrl}/about`, priority: '0.7', changefreq: 'monthly' },
+          { loc: `${this.baseUrl}/terms`, priority: '0.5', changefreq: 'yearly' },
+          { loc: `${this.baseUrl}/privacy`, priority: '0.5', changefreq: 'yearly' }
+        ];
 
-    let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+        // Add article URLs dynamically from data service
+        if (response.data && response.data.length > 0) {
+          response.data.forEach(article => {
+            urls.push({
+              loc: `${this.baseUrl}/article/${article.slug}`,
+              priority: '0.8',
+              changefreq: 'weekly'
+            });
+          });
+        }
 
-    urls.forEach(url => {
-      sitemap += '  <url>\n';
-      sitemap += `    <loc>${url.loc}</loc>\n`;
-      sitemap += `    <priority>${url.priority}</priority>\n`;
-      sitemap += `    <changefreq>${url.changefreq}</changefreq>\n`;
-      sitemap += `    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n`;
-      sitemap += '  </url>\n';
-    });
+        let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
+        sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
-    sitemap += '</urlset>';
-    return sitemap;
+        urls.forEach(url => {
+          sitemap += '  <url>\n';
+          sitemap += `    <loc>${url.loc}</loc>\n`;
+          sitemap += `    <priority>${url.priority}</priority>\n`;
+          sitemap += `    <changefreq>${url.changefreq}</changefreq>\n`;
+          sitemap += `    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n`;
+          sitemap += '  </url>\n';
+        });
+
+        sitemap += '</urlset>';
+        return sitemap;
+      })
+    );
   }
 
   generateRobotsTxt(): string {
@@ -61,15 +70,13 @@ Disallow: /private/
 Crawl-delay: 1`;
   }
 
-  private getArticleSlugs(): string[] {
-    // This would typically come from your data service
-    // For now, return sample slugs
-    return [
-      'ai-policy-changes-2024',
-      'healthcare-reform-update',
-      'economic-policy-analysis',
-      'education-system-overhaul',
-      'climate-policy-developments'
-    ];
+  // Method to get sitemap as plain text for API responses
+  getSitemapText(): Observable<string> {
+    return this.generateSitemap();
+  }
+
+  // Method to get robots.txt as plain text for API responses
+  getRobotsText(): string {
+    return this.generateRobotsTxt();
   }
 }

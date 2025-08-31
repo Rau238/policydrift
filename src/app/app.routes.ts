@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { robotsResolver } from './shared/resolvers/robots.resolver';
+import { sitemapResolver } from './shared/resolvers/sitemap.resolver';
 
 export const routes: Routes = [
   {
@@ -30,6 +32,16 @@ export const routes: Routes = [
     path: 'about',
     loadComponent: () => import('./features/about/about.component').then(m => m.AboutComponent),
     title: 'About Us - PolicyDrift'
+  },
+  {
+    path: 'robots.txt',
+    loadComponent: () => import('./shared/components/robots/robots.component').then(m => m.RobotsComponent),
+    resolve: { content: robotsResolver }
+  },
+  {
+    path: 'sitemap.xml',
+    loadComponent: () => import('./shared/components/sitemap/sitemap.component').then(m => m.SitemapComponent),
+    resolve: { content: sitemapResolver }
   },
   {
     path: '**',
