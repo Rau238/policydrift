@@ -33,8 +33,9 @@ interface NewsArticle {
           <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
             <label for="category-select" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
             <select 
+              #categorySelect
               id="category-select"
-              (change)="setActiveCategory($event.target.value)"
+              (change)="setActiveCategory(categorySelect.value)"
               [value]="activeCategory()"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
               <option *ngFor="let category of categories" [value]="category">
@@ -45,7 +46,8 @@ interface NewsArticle {
             <!-- Mobile Sort Options -->
             <div class="mt-4 flex gap-2">
               <select 
-                (change)="setSortBy($event.target.value)"
+                #sortSelect
+                (change)="setSortBy(sortSelect.value)"
                 [value]="sortBy()"
                 class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                 <option value="date">📅 Date</option>
