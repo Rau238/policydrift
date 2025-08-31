@@ -7,24 +7,19 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 
-# Allow crawling of all content
-Crawl-delay: 1
-
-# Sitemap location
+# Dynamic sitemap - will be served by Angular routes
 Sitemap: https://policydrift.live/sitemap.xml
 
-# Disallow crawling of any potential admin areas
+# Allow all search engines to crawl
+Crawl-delay: 1
+
+# Additional SEO-friendly settings
+Allow: /article/
+Allow: /all-articles/
+Allow: /about/
+Allow: /terms/
+Allow: /privacy/
+
+# Block access to admin or private areas
 Disallow: /admin/
 Disallow: /private/
-Disallow: /_next/
-Disallow: /api/
-
-# Allow specific search engine bots
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: LinkedInBot
-Allow: /

@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
+import { DataService } from './data.service';
+import { Observable, of, timer, switchMap } from 'rxjs';
+import { map, catchError, shareReplay } from 'rxjs/operators';
 
 export interface SeoData {
   title: string;
@@ -16,6 +19,21 @@ export interface SeoData {
   modifiedDate?: string;
 }
 
+export interface SeoFile {
+  content: string;
+  contentType: string;
+  lastModified: Date;
+  etag: string;
+  size: number;
+}
+
+export interface SeoStats {
+  lastUpdate: Date;
+  robotsSize: number;
+  sitemapSize: number;
+  totalArticles: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,11 +41,24 @@ export class SeoService {
   private siteUrl = 'https://policydrift.live';
   private siteName = 'PolicyDrift';
   private defaultImage = 'https://policydrift.live/images/og-default.jpg';
+  
+  // SEO Files caching
+  private robotsCache: SeoFile | null = null;
+  private sitemapCache: SeoFile | null = null;
+  private lastUpdate = new Date();
+  
+  // Cache duration in milliseconds (1 hour)
+  private readonly CACHE_DURATION = 60 * 60 * 1000;
 
   constructor(
     private meta: Meta,
-    private titleService: Title
-  ) {}
+    private titleService: Title,
+    private dataService: DataService
+  ) {
+    this.setupAutoRefresh();
+  }
+
+  // ===== SEO TAGS MANAGEMENT =====
 
   updateSeoTags(seoData: SeoData): void {
     // Update page title
@@ -93,22 +124,123 @@ export class SeoService {
     document.head.appendChild(script);
   }
 
-  private getCurrentUrl(): string {
-    return `${this.siteUrl}${window.location.pathname}`;
+  // ===== DYNAMIC SEO FILES =====
+
+  /**
+   * Get robots.txt content with caching and auto-refresh
+   */
+  getRobotsTxt(): Observable<SeoFile> {
+    if (this.shouldUseCache(this.robotsCache)) {
+      return of(this.robotsCache!);
+    }
+
+    return this.generateRobotsTxt().pipe(
+      map(content => {
+        const file: SeoFile = {
+          content,
+          contentType: 'text/plain; charset=utf-8',
+          lastModified: new Date(),
+          etag: this.generateEtag(content),
+          size: content.length
+        };
+        this.robotsCache = file;
+        return file;
+      }),
+      shareReplay(1)
+    );
   }
 
-  // Website-level structured data
-  getWebsiteStructuredData(): any {
+  /**
+   * Get sitemap.xml content with caching and auto-refresh
+   */
+  getSitemapXml(): Observable<SeoFile> {
+    if (this.shouldUseCache(this.sitemapCache)) {
+      return of(this.sitemapCache!);
+    }
+
+    return this.generateSitemap().pipe(
+      map(content => {
+        const file: SeoFile = {
+          content,
+          contentType: 'application/xml; charset=utf-8',
+          lastModified: new Date(),
+          etag: this.generateEtag(content),
+          size: content.length
+        };
+        this.sitemapCache = file;
+        return file;
+      }),
+      catchError(error => {
+        console.error('Error generating sitemap:', error);
+        // Return fallback sitemap
+        const fallbackContent = this.generateFallbackSitemap();
+        const file: SeoFile = {
+          content: fallbackContent,
+          contentType: 'application/xml; charset=utf-8',
+          lastModified: new Date(),
+          etag: this.generateEtag(fallbackContent),
+          size: fallbackContent.length
+        };
+        this.sitemapCache = file;
+        return of(file);
+      }),
+      shareReplay(1)
+    );
+  }
+
+  /**
+   * Force refresh of all SEO files
+   */
+  refreshAll(): Observable<{ robots: SeoFile; sitemap: SeoFile }> {
+    this.clearCache();
+    return this.getRobotsTxt().pipe(
+      switchMap(robots => 
+        this.getSitemapXml().pipe(
+          map(sitemap => ({ robots, sitemap }))
+        )
+      )
+    );
+  }
+
+  /**
+   * Get HTTP headers for SEO files
+   */
+  getHeaders(file: SeoFile): { [key: string]: string } {
+    return {
+      'Content-Type': file.contentType,
+      'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+      'Last-Modified': file.lastModified.toUTCString(),
+      'ETag': file.etag,
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY'
+    };
+  }
+
+  /**
+   * Get comprehensive SEO statistics
+   */
+  getStats(): SeoStats {
+    return {
+      lastUpdate: this.lastUpdate,
+      robotsSize: this.robotsCache?.size || 0,
+      sitemapSize: this.sitemapCache?.size || 0,
+      totalArticles: this.getTotalArticles()
+    };
+  }
+
+  // ===== STRUCTURED DATA =====
+
+  getWebsiteStructuredData(): object {
     return {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": this.siteName,
+      "name": "PolicyDrift",
       "alternateName": "Policy Drift",
       "url": this.siteUrl,
       "description": "AI-powered policy insights and analysis platform providing comprehensive coverage of political developments, policy changes, and governance trends.",
       "publisher": {
         "@type": "Organization",
-        "name": this.siteName,
+        "name": "PolicyDrift",
         "url": this.siteUrl,
         "logo": {
           "@type": "ImageObject",
@@ -130,12 +262,11 @@ export class SeoService {
     };
   }
 
-  // Organization structured data
-  getOrganizationStructuredData(): any {
+  getOrganizationStructuredData(): object {
     return {
       "@context": "https://schema.org",
       "@type": "Organization",
-      "name": this.siteName,
+      "name": "PolicyDrift",
       "url": this.siteUrl,
       "logo": `${this.siteUrl}/logo.png`,
       "description": "AI-powered policy insights and analysis platform",
@@ -152,7 +283,6 @@ export class SeoService {
     };
   }
 
-  // Breadcrumb structured data
   getBreadcrumbStructuredData(breadcrumbs: Array<{name: string, url: string}>): any {
     return {
       "@context": "https://schema.org",
@@ -166,7 +296,6 @@ export class SeoService {
     };
   }
 
-  // News article structured data
   getNewsArticleStructuredData(article: any): any {
     return {
       "@context": "https://schema.org",
@@ -209,5 +338,143 @@ export class SeoService {
       "isAccessibleForFree": true,
       "genre": "news"
     };
+  }
+
+  // ===== PRIVATE METHODS =====
+
+  private getCurrentUrl(): string {
+    return `${this.siteUrl}${window.location.pathname}`;
+  }
+
+  private generateRobotsTxt(): Observable<string> {
+    const robotsContent = `User-agent: *
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: ${this.siteUrl}/sitemap.xml
+
+# Block access to admin or private areas
+Disallow: /admin/
+Disallow: /private/
+
+# Allow all search engines to crawl
+Crawl-delay: 1
+
+# Additional SEO-friendly settings
+Allow: /article/
+Allow: /all-articles/
+Allow: /about/
+Allow: /terms/
+Allow: /privacy/`;
+
+    return of(robotsContent);
+  }
+
+  private generateSitemap(): Observable<string> {
+    return this.dataService.getArticles().pipe(
+      map(response => {
+        const urls = [
+          { loc: this.siteUrl, priority: '1.0', changefreq: 'daily' },
+          { loc: `${this.siteUrl}/all-articles`, priority: '0.9', changefreq: 'daily' },
+          { loc: `${this.siteUrl}/about`, priority: '0.7', changefreq: 'monthly' },
+          { loc: `${this.siteUrl}/terms`, priority: '0.5', changefreq: 'yearly' },
+          { loc: `${this.siteUrl}/privacy`, priority: '0.5', changefreq: 'yearly' }
+        ];
+
+        // Add article URLs dynamically from data service
+        if (response.data && response.data.length > 0) {
+          response.data.forEach(article => {
+            urls.push({
+              loc: `${this.siteUrl}/article/${article.slug}`,
+              priority: '0.8',
+              changefreq: 'weekly'
+            });
+          });
+        }
+
+        let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
+        sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+
+        urls.forEach(url => {
+          sitemap += '  <url>\n';
+          sitemap += `    <loc>${url.loc}</loc>\n`;
+          sitemap += `    <priority>${url.priority}</priority>\n`;
+          sitemap += `    <changefreq>${url.changefreq}</changefreq>\n`;
+          sitemap += `    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n`;
+          sitemap += '  </url>\n';
+        });
+
+        sitemap += '</urlset>';
+        return sitemap;
+      })
+    );
+  }
+
+  private generateFallbackSitemap(): string {
+    const urls = [
+      { loc: this.siteUrl, priority: '1.0', changefreq: 'daily' },
+      { loc: `${this.siteUrl}/all-articles`, priority: '0.9', changefreq: 'daily' },
+      { loc: `${this.siteUrl}/about`, priority: '0.7', changefreq: 'monthly' },
+      { loc: `${this.siteUrl}/terms`, priority: '0.5', changefreq: 'yearly' },
+      { loc: `${this.siteUrl}/privacy`, priority: '0.5', changefreq: 'yearly' }
+    ];
+
+    let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+
+    urls.forEach(url => {
+      sitemap += '  <url>\n';
+      sitemap += `    <loc>${url.loc}</loc>\n`;
+      sitemap += `    <priority>${url.priority}</priority>\n`;
+      sitemap += `    <changefreq>${url.changefreq}</changefreq>\n`;
+      sitemap += `    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n`;
+      sitemap += '  </url>\n';
+    });
+
+    sitemap += '</urlset>';
+    return sitemap;
+  }
+
+  private shouldUseCache(cache: SeoFile | null): boolean {
+    if (!cache) return false;
+    const now = new Date();
+    return (now.getTime() - cache.lastModified.getTime()) < this.CACHE_DURATION;
+  }
+
+  private generateEtag(content: string): string {
+    // Simple hash function for ETag generation
+    let hash = 0;
+    for (let i = 0; i < content.length; i++) {
+      const char = content.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    return `"${Math.abs(hash).toString(16)}"`;
+  }
+
+  private clearCache(): void {
+    this.robotsCache = null;
+    this.sitemapCache = null;
+    this.lastUpdate = new Date();
+  }
+
+  private setupAutoRefresh(): void {
+    // Refresh cache every hour
+    timer(this.CACHE_DURATION, this.CACHE_DURATION).subscribe(() => {
+      console.log('Auto-refreshing SEO files cache...');
+      this.clearCache();
+    });
+  }
+
+  private getTotalArticles(): number {
+    // This would typically come from your data service
+    // For now, return a reasonable estimate
+    return this.sitemapCache ? 
+      (this.sitemapCache.content.match(/<url>/g) || []).length - 5 : 0; // Subtract static pages
   }
 }
