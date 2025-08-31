@@ -4,7 +4,6 @@ import { RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { isDevMode } from '@angular/core';
 import { SeoService } from './shared/services/seo.service';
-import { SeoInterceptorService } from './shared/services/seo-interceptor.service';
 import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
 
@@ -22,7 +21,6 @@ export class AppComponent implements OnInit {
 
   constructor(
     private seoService: SeoService,
-    private seoInterceptor: SeoInterceptorService,
     private swUpdate: SwUpdate
   ) {}
 
