@@ -1,0 +1,3 @@
+# App-ads.txt file for PolicyDrift
+# This file is used for mobile app advertising
+# Currently not using mobile app ads, but keeping for future use

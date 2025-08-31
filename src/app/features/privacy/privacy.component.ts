@@ -254,6 +254,49 @@ import { SeoService } from '../../shared/services/seo.service';
             </div>
 
             <div class="policy-section">
+              <h2>Third-Party Advertising</h2>
+              <p>We use Google AdSense to display advertisements on our website. Google AdSense may use cookies and web beacons to collect information about your visits to this and other websites to provide targeted advertising.</p>
+              
+              <div class="advertising-info">
+                <div class="ad-item">
+                  <div class="ad-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3>Google AdSense</h3>
+                    <p>We use Google AdSense to serve personalized advertisements. Google may use your browsing history and interests to show relevant ads.</p>
+                  </div>
+                </div>
+
+                <div class="ad-item">
+                  <div class="ad-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3>Cookie Usage</h3>
+                    <p>AdSense uses cookies to track user behavior and serve relevant advertisements. You can opt out of personalized advertising through Google's Ad Settings.</p>
+                  </div>
+                </div>
+
+                <div class="ad-item">
+                  <div class="ad-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3>Opt-Out Options</h3>
+                    <p>You can opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">Google Ad Settings</a> or using browser extensions to block ads.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="policy-section">
               <h2>Contact Us</h2>
               <p>If you have any questions about this Privacy Policy or our data practices, please contact us:</p>
               
@@ -584,6 +627,52 @@ import { SeoService } from '../../shared/services/seo.service';
     }
 
     .contact-item a:hover {
+      text-decoration: underline;
+    }
+
+    .advertising-info {
+      margin-top: 1.5rem;
+    }
+
+    .ad-item {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: #f8fafc;
+      border-radius: 0.5rem;
+    }
+
+    .ad-icon {
+      flex-shrink: 0;
+    }
+
+    .ad-icon svg {
+      width: 24px;
+      height: 24px;
+      color: #3b82f6;
+    }
+
+    .ad-item h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 0.5rem;
+    }
+
+    .ad-item p {
+      color: #6b7280;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    .ad-item a {
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .ad-item a:hover {
       text-decoration: underline;
     }
 
