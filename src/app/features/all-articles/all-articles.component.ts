@@ -1,6 +1,6 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { SeoService } from '../../shared/services/seo.service';
 
 interface NewsArticle {
@@ -22,7 +22,7 @@ interface NewsArticle {
 @Component({
   selector: 'app-all-articles',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   template: `
     <div class="min-h-screen bg-gray-50">
 
