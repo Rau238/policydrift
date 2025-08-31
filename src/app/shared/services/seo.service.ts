@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { DataService } from './data.service';
 import { Observable, of, timer, switchMap } from 'rxjs';
@@ -53,9 +53,12 @@ export class SeoService {
   constructor(
     private meta: Meta,
     private titleService: Title,
-    private dataService: DataService
+    @Optional() private dataService?: DataService
   ) {
-    this.setupAutoRefresh();
+    // Only setup auto-refresh if DataService is available
+    if (this.dataService) {
+      this.setupAutoRefresh();
+    }
   }
 
   // ===== SEO TAGS MANAGEMENT =====
@@ -376,6 +379,11 @@ Allow: /privacy/`;
   }
 
   private generateSitemap(): Observable<string> {
+    // If DataService is not available, return fallback sitemap
+    if (!this.dataService) {
+      return of(this.generateFallbackSitemap());
+    }
+
     return this.dataService.getArticles().pipe(
       map(response => {
         const urls = [
@@ -411,6 +419,11 @@ Allow: /privacy/`;
 
         sitemap += '</urlset>';
         return sitemap;
+      }),
+      catchError(error => {
+        console.error('Error generating dynamic sitemap:', error);
+        // Return fallback sitemap on error
+        return of(this.generateFallbackSitemap());
       })
     );
   }
@@ -464,11 +477,14 @@ Allow: /privacy/`;
   }
 
   private setupAutoRefresh(): void {
-    // Refresh cache every hour
-    timer(this.CACHE_DURATION, this.CACHE_DURATION).subscribe(() => {
-      console.log('Auto-refreshing SEO files cache...');
-      this.clearCache();
-    });
+    // Only setup if DataService is available
+    if (this.dataService) {
+      // Refresh cache every hour
+      timer(this.CACHE_DURATION, this.CACHE_DURATION).subscribe(() => {
+        console.log('Auto-refreshing SEO files cache...');
+        this.clearCache();
+      });
+    }
   }
 
   private getTotalArticles(): number {
