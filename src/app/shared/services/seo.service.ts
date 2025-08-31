@@ -252,9 +252,11 @@ export class SeoService {
           "height": 60
         },
         "sameAs": [
-          "https://twitter.com/PolicyDrift",
-          "https://facebook.com/PolicyDrift",
-          "https://linkedin.com/company/policydrift"
+          "https://www.youtube.com/@Policydrift-p1v",
+          "https://www.instagram.com/policy_drift/",
+          "https://x.com/policy_drift",
+          "https://linkedin.com/company/policydrift",
+          "https://www.facebook.com/profile.php?id=61575901066122"
         ]
       },
       "potentialAction": {
@@ -272,16 +274,18 @@ export class SeoService {
       "name": "PolicyDrift",
       "url": this.siteUrl,
       "logo": `${this.siteUrl}/logo.png`,
-      "description": "AI-powered policy insights and analysis platform",
+      "description": "AI-powered policy insights and analysis platform for geopolitical news and policy developments",
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "customer service",
-        "email": "contact@policydrift.com"
+        "email": "policy.drift.yt@gmail.com"
       },
       "sameAs": [
-        "https://twitter.com/PolicyDrift",
-        "https://facebook.com/PolicyDrift",
-        "https://linkedin.com/company/policydrift"
+        "https://www.youtube.com/@Policydrift-p1v",
+        "https://www.instagram.com/policy_drift/",
+        "https://x.com/policy_drift",
+        "https://linkedin.com/company/policydrift",
+        "https://www.facebook.com/profile.php?id=61575901066122"
       ]
     };
   }

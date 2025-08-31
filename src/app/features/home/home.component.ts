@@ -533,7 +533,26 @@ export class HomeComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.initializeSEO();
+    // Update SEO tags for home page
+    this.seoService.updateSeoTags({
+      title: 'PolicyDrift - Latest Geopolitical News & Policy Analysis | AI-Powered Insights',
+      description: 'Get the latest geopolitical news, policy developments, and trending political analysis from PolicyDrift. AI-powered insights that make complex global issues easy to understand.',
+      keywords: 'geopolitical news, latest political developments, policy analysis, global politics, trending news, international relations, policy drift, AI insights',
+      author: 'PolicyDrift Team',
+      ogType: 'website',
+      ogImage: 'https://policydrift.live/images/og-default.jpg',
+      canonicalUrl: 'https://policydrift.live'
+    });
+
+    // Add structured data for better SEO
+    this.seoService.addStructuredData(
+      this.seoService.getWebsiteStructuredData()
+    );
+
+    this.seoService.addStructuredData(
+      this.seoService.getOrganizationStructuredData()
+    );
+
     this.loadData();
     this.updateCurrentTime();
     // Update time every minute

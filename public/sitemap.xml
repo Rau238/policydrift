@@ -30,4 +30,35 @@
     <changefreq>yearly</changefreq>
     <lastmod>2025-01-01</lastmod>
   </url>
+  <!-- Social Media Profiles -->
+  <url>
+    <loc>https://www.youtube.com/@Policydrift-p1v</loc>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+    <lastmod>2025-01-01</lastmod>
+  </url>
+  <url>
+    <loc>https://www.instagram.com/policy_drift/</loc>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+    <lastmod>2025-01-01</lastmod>
+  </url>
+  <url>
+    <loc>https://x.com/policy_drift</loc>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+    <lastmod>2025-01-01</lastmod>
+  </url>
+  <url>
+    <loc>https://linkedin.com/company/policydrift</loc>
+    <priority>0.7</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2025-01-01</lastmod>
+  </url>
+  <url>
+    <loc>https://www.facebook.com/profile.php?id=61575901066122</loc>
+    <priority>0.7</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2025-01-01</lastmod>
+  </url>
 </urlset>

@@ -17,7 +17,6 @@ import { FooterComponent } from './shared/footer/footer.component';
 export class AppComponent implements OnInit {
   title = 'policydrift';
   isDevMode = isDevMode();
-  pwaStatus = 'Initializing...';
 
   constructor(
     private seoService: SeoService,
@@ -26,38 +25,30 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeGlobalSEO();
-    this.checkForUpdates();
   }
 
 
   private initializeGlobalSEO(): void {
     this.seoService.updateSeoTags({
-      title: 'PolicyDrift - AI-powered Policy Insights & Political Analysis',
-      description: 'Stay informed with PolicyDrift\'s AI-powered political insights and comprehensive policy analysis.',
-      keywords: 'policy analysis, political news, AI insights, governance, policy drift',
+      title: 'PolicyDrift - AI-powered Geopolitical News & Policy Analysis',
+      description: 'Stay informed with PolicyDrift\'s AI-powered geopolitical insights, latest political developments, policy changes, and trending news analysis. Easy-to-understand coverage of complex global issues.',
+      keywords: 'geopolitical news, policy analysis, political developments, global politics, policy drift, international relations, political insights, AI-powered analysis, trending news, policy changes, governance trends',
       author: 'PolicyDrift Team',
       ogType: 'website',
       ogImage: 'https://policydrift.live/images/og-default.jpg',
       canonicalUrl: 'https://policydrift.live'
     });
+
+    // Add website structured data
+    this.seoService.addStructuredData(
+      this.seoService.getWebsiteStructuredData()
+    );
+
+    // Add organization structured data
+    this.seoService.addStructuredData(
+      this.seoService.getOrganizationStructuredData()
+    );
   }
 
-  private checkForUpdates() {
-    if (this.swUpdate.isEnabled) {
-      this.pwaStatus = 'Service Worker Enabled';
-      this.swUpdate.versionUpdates.subscribe(event => {
-        if (event.type === 'VERSION_READY') {
-          this.pwaStatus = 'Update Available';
-          window.location.reload();
-        }
-      });
-      this.swUpdate.checkForUpdate().then(() => {
-        this.pwaStatus = 'Checking for Updates';
-      }).catch(err => {
-        this.pwaStatus = 'Update Check Failed';
-      });
-    } else {
-      this.pwaStatus = 'Service Worker Disabled';
-    }
-  }
+ 
 }
