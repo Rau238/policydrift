@@ -20,12 +20,6 @@ Allow: /about/
 Allow: /terms/
 Allow: /privacy/
 
-# Social Media Profiles
-Allow: /youtube/@Policydrift-p1v
-Allow: /instagram/policy_drift/
-Allow: /x/policy_drift
-Allow: /linkedin/company/policydrift
-Allow: /facebook/profile.php?id=61575901066122
 
 # Block access to admin or private areas
 Disallow: /admin/
